@@ -1,4 +1,4 @@
-const getWeb3 = () => {
+const getWeb3 = async () => {
     return new Promise((resolve, reject) => {
         window.addEventListener('load', function () {
             let web3 = window.ethereum;

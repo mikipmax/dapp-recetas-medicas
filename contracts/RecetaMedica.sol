@@ -1,39 +1,39 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity >=0.7.0 <0.9.0;
 
-contract RecetaMedica{
+contract RecetaMedica {
 
-    uint public pacienteId;
-    struct Paciente{
+    uint private pacienteId;
+
+    struct Paciente {
         address doctor;
         string cedula;
         string nombres;
         string apellidos;
     }
 
-    //Paciente[] public pacientes;
-    mapping(uint=>Paciente) public pacientes;
+    mapping(uint => Paciente) public pacientes;
     constructor(){
-        //pacientes.push(Paciente('1312960444','Michael','Frederick'));
-        //pacientes.push(Paciente('1705471223','Winka','Rea'));
+        pacienteId = 0;
+        pacientes[pacienteId] = (Paciente(0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3, '1312960444', 'Michael', 'Frederick'));
+        pacienteId++;
+        pacientes[pacienteId] = (Paciente(0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3, '1705471223', 'Winka', 'Rea'));
     }
 
-    // function totalPacientes() public view returns(uint){
-    //  return pacientes.length;
-    // }
 
     function registrarPaciente(
         address _doctor,
         string memory _cedula,
         string memory _nombre,
-        string memory _apellido) public{
+        string memory _apellido) public {
 
         pacienteId++;
-
-        pacientes[pacienteId]=Paciente(_doctor,_cedula,_nombre,_apellido);
+        pacientes[pacienteId] = Paciente(_doctor, _cedula, _nombre, _apellido);
     }
 
+    function pacienteIdActual() public view returns (uint) {
+        return pacienteId;
+    }
 
 
 }
