@@ -1,4 +1,6 @@
-const header = () => {
+import React from "react";
+
+const Header = () => {
 
     return (<nav className="navbar navbar-expand-lg navbar-light header">
         <div className="container-fluid">
@@ -24,7 +26,7 @@ const header = () => {
         </div>
     </nav>);
 }
-export default header;
+export default Header;
 
 
 

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d561656c-ec53-4739-8f94-d3b3d1451452" name="Default Changelist" comment="" />
+    <list default="true" id="d561656c-ec53-4739-8f94-d3b3d1451452" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/artifacts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/Migrations.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/artifacts/medicinas.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/medicinas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/footer/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/footer/Footer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/header/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/receta/recetaService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/receta/recetaService.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -9,6 +18,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1ubeoqLzNKW0YiCzpwMzoj8ltDm" />
   <component name="ProjectLevelVcsManager">
@@ -24,7 +41,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/artifacts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../sopa-letras-assembler" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -33,19 +50,26 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\public" />
       <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\src" />
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas" />
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\src\artifacts" />
       <recent name="C:\Users\Mikipmax\Documents\RepoGit\dapp-recetas-medicas\migrations" />
-      <recent name="C:\Users\Mikipmax\Documents\RepoGit\dapp-recetas-medicas\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\public" />
     </key>
   </component>
   <component name="RunManager" selected="npm.start">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -92,7 +116,8 @@
       <workItem from="1625193362058" duration="1807000" />
       <workItem from="1625282230192" duration="4757000" />
       <workItem from="1625292121177" duration="1791000" />
-      <workItem from="1625339361321" duration="14217000" />
+      <workItem from="1625339361321" duration="31563000" />
+      <workItem from="1625718263613" duration="302000" />
     </task>
     <servers />
   </component>

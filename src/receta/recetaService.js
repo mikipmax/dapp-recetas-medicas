@@ -3,6 +3,11 @@ export class RecetaService {
         this.contract = contract;
     }
 
+    async registrarPaciente(cedula, nombres, apellidos, cuentaDoctor) {
+        return this.contract.registrarPaciente( cuentaDoctor, cedula, nombres, apellidos, {from: cuentaDoctor});
+    }
+
+
     async getPacientes() {
 
         let pacienteIdActual = await this.contract.pacienteIdActual();

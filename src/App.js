@@ -4,7 +4,10 @@ import Footer from "./footer/Footer"
 import Header from "./header/Header";
 import RecetaMedicaContract from './receta/receta'
 import {RecetaService} from "./receta/recetaService";
+import RegistroPaciente from "./components/registroPaciente";
+import Medicinas from "./components/medicinas";
 
+//https://techclub.tajamar.es/paginacion-en-react/
 export default class App extends Component {
     constructor(props) {
 
@@ -81,7 +84,11 @@ export default class App extends Component {
                 )}
                 </tbody>
             </table>
-            <button type="button" className="btn btn-outline-primary" onClick={()=>console.log("Test")}>Guardar</button>
+
+            <br/>
+
+            <RegistroPaciente cuentaDoctor={this.state.cuenta} recetaServicio={this.recetaServicio}/>
+            <Medicinas/>
             {/*<p><strong>{this.state.cuenta}</strong></p>*/}
             <Footer autor="Michael Ponce"/>
         </React.Fragment>
