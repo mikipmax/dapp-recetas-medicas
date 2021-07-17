@@ -2,14 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d561656c-ec53-4739-8f94-d3b3d1451452" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/public/img/spinner.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/dataTablePaginado/buscador.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/fullPageLoader.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/hooks/useHooksPageLoader.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/medicinas3.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/artifacts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/Migrations.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/artifacts/medicinas.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/medicinas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/footer/Footer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/footer/Footer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/header/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/receta/recetaService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/receta/recetaService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/medicinas.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +44,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../sopa-letras-assembler" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -50,26 +53,25 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\public" />
       <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\src" />
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\src\components" />
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\public" />
       <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas" />
       <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\src\artifacts" />
-      <recent name="C:\Users\Mikipmax\Documents\RepoGit\dapp-recetas-medicas\migrations" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\public\img" />
       <recent name="C:\Users\Mickmaxy\Documents\GitHub\dapp-recetas-medicas\public" />
     </key>
   </component>
   <component name="RunManager" selected="npm.start">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -118,6 +120,10 @@
       <workItem from="1625292121177" duration="1791000" />
       <workItem from="1625339361321" duration="31563000" />
       <workItem from="1625718263613" duration="302000" />
+      <workItem from="1626054175814" duration="4561000" />
+      <workItem from="1626142784564" duration="8003000" />
+      <workItem from="1626408521162" duration="5463000" />
+      <workItem from="1626485636450" duration="11918000" />
     </task>
     <servers />
   </component>

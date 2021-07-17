@@ -5,7 +5,7 @@ import Header from "./header/Header";
 import RecetaMedicaContract from './receta/receta'
 import {RecetaService} from "./receta/recetaService";
 import RegistroPaciente from "./components/registroPaciente";
-import Medicinas from "./components/medicinas";
+import DataTable from "./components/medicinas3";
 
 //https://techclub.tajamar.es/paginacion-en-react/
 export default class App extends Component {
@@ -88,9 +88,11 @@ export default class App extends Component {
             <br/>
 
             <RegistroPaciente cuentaDoctor={this.state.cuenta} recetaServicio={this.recetaServicio}/>
-            <Medicinas/>
+            <DataTable/>
+
+
             {/*<p><strong>{this.state.cuenta}</strong></p>*/}
-            <Footer autor="Michael Ponce"/>
+            {/*<Footer autor="Michael Ponce"/>*/}
         </React.Fragment>
     }
 }
