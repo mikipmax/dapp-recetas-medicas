@@ -1,10 +1,11 @@
 .header {
-    background-color: #5592c6;
+    background-color: #e3f2fd;
 }
-.footer{
+
+.footer {
+
     position: absolute;
-    bottom: 0px;
-    height: 60px;
-    width: 100%;
+    left: 50%;
+    transform: translatex(-50%);
 
 }

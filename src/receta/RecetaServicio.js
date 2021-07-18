@@ -1,10 +1,10 @@
-export class RecetaService {
+export class RecetaServicio {
     constructor(contract) {
         this.contract = contract;
     }
 
     async registrarPaciente(cedula, nombres, apellidos, cuentaDoctor) {
-        return this.contract.registrarPaciente( cuentaDoctor, cedula, nombres, apellidos, {from: cuentaDoctor});
+        return this.contract.registrarPaciente(cuentaDoctor, cedula, nombres, apellidos, {from: cuentaDoctor});
     }
 
 
@@ -17,6 +17,16 @@ export class RecetaService {
             pacientes.push(paciente)
         }
         return this.mapPacientes(pacientes);
+    }
+
+    async getMedico(cuentaDoctor) {
+        let medico = await this.contract.medicos(cuentaDoctor);
+        return {
+            cedulaProfesional: medico[0],
+            nombresMedico: medico[1],
+            appellidosMedico: medico[2],
+            especialidad: medico[3]
+        };
     }
 
     mapPacientes(pacientes) {

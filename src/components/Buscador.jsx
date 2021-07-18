@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Search = ({ onSearch }) => {
+const Buscador = ({ onSearch }) => {
     const [search, setSearch] = useState("");
 
     const onInputChange = value => {
@@ -19,4 +19,4 @@ const Search = ({ onSearch }) => {
     );
 };
 
-export default Search;
+export default Buscador;

@@ -1,33 +1,20 @@
-import React, {useEffect, useState, useMemo} from "react";
+import React, {useEffect, useState, useMemo, useContext} from "react";
 
-import Search from "./dataTablePaginado/buscador";
-import useFullPageLoader from "./hooks/useHooksPageLoader";
+import Buscador from "./Buscador";
+import AppContext from "../contexts/AppContext";
 
 
-const DataTable = () => {
-    const [medicinas, setMedicinas] = useState([]);
-    const [loader, showLoader, hideLoader] = useFullPageLoader();
+const Medicinas = () => {
+
     const [totalItems, setTotalItems] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
 
-
+    const {getMedicinas, medicinas} = useContext(AppContext);
     const ITEMS_PER_PAGE = 10;
 
     useEffect(() => {
-        const getData = () => {
-            showLoader();
-            fetch("medicinas.json")
-                .then(response => response.json())
-                .then(json => {
-                    hideLoader();
-                    setMedicinas(json);
-
-                });
-        };
-
-        getData();
-        // eslint-disable-next-line
+        getMedicinas();
     }, []);
 
     const medicinasData = useMemo(() => {
@@ -55,15 +42,14 @@ const DataTable = () => {
         console.log(medicina)
     }
     return (
-        <>
+        <div className="container">
 
-
-            <div className="row w-100">
+            <div className="row w-100 ">
                 <div className="col mb-3 col-12 text-center">
                     <div className="row">
 
                         <div className="col-md-6 d-flex flex-row-reverse">
-                            <Search
+                            <Buscador
                                 onSearch={value => {
                                     setSearch(value);
                                     setCurrentPage(1);
@@ -98,9 +84,9 @@ const DataTable = () => {
                     </table>
                 </div>
             </div>
-            {loader}
-        </>
+        </div>
+
     );
 };
 
-export default DataTable;
+export default Medicinas;
