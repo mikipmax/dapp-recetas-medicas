@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 import AppContext from "../contexts/AppContext";
 
 const Header = () => {
-    const { medico} = useContext(AppContext);
+    const {medico} = useContext(AppContext);
     return (<nav className="navbar sticky-top navbar-expand-lg navbar-light header">
         <div className="container">
 
@@ -12,7 +12,10 @@ const Header = () => {
                     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"/>
             </button>
-            <a className="navbar-brand" >&nbsp;Dapp Recetas Médicas</a>
+            <NavLink className="navbar-brand" aria-current="page" to="/">
+                &nbsp;Dapp Recetas Médicas
+            </NavLink>
+
             <div className="collapse navbar-collapse" id="navbarText">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">

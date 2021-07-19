@@ -1,27 +1,40 @@
-import {useContext, useState} from "react";
+import {useContext,  useState} from "react";
 
 import AppContext from "../contexts/AppContext";
+
 
 const RegistroPaciente = () => {
 
     const [cedula, setCedula] = useState("");
     const [nombres, setNombres] = useState("");
     const [apellidos, setApellidos] = useState("");
-    const {cuenta, recetaServicio} = useContext(AppContext)
+    const [correo, setCorreo] = useState("");
+    const [edad, setEdad] = useState("");
+
+    const {cuenta, recetaServicio, mostrarNotificacion} = useContext(AppContext)
     const handleCedulaChange = ({target: {value}}) => setCedula(value)
     const handleNombresChange = ({target: {value}}) => setNombres(value)
     const handleApellidosChange = ({target: {value}}) => setApellidos(value)
+    const handleCorreoChange = ({target: {value}}) => setCorreo(value)
+    const handleEdadChange = ({target: {value}}) => setEdad(value)
+
     const handleFormularioSubmit = async event => {
         event.preventDefault();
-        await recetaServicio.current.registrarPaciente(cedula, nombres, apellidos, cuenta);
-        setCedula("");
-        setNombres("");
-        setApellidos("");
+        try {
+            await recetaServicio.current.registrarPaciente(cedula, nombres, apellidos, correo, edad, cuenta)
+            mostrarNotificacion(1, "Paciente creado satisfactoriamente");
+        } catch (error) {
+            mostrarNotificacion(2, "Algo salió Mal: " + error.message);
+        } finally {
+            setCedula("");
+            setNombres("");
+            setApellidos("");
+            setCorreo("");
+            setEdad("");
+        }
     }
 
     return (
-
-
         <div className="container my-5">
 
             <div className="col-md-4 offset-md-4">
@@ -29,27 +42,36 @@ const RegistroPaciente = () => {
                     <div className="card-header border-info text-center">NUEVO PACIENTE</div>
                     <div className="card-body ">
 
-
                         <form onSubmit={handleFormularioSubmit}>
-
                             <div className="form-floating mb-3">
-                                <input type="text" value={cedula} onChange={handleCedulaChange} className="form-control"
-                                       id="id-cedula" placeholder="xxxxxxxxx-x"/>
+                                <input type="text" value={cedula} onChange={handleCedulaChange}
+                                       className="form-control"
+                                       id="id-cedula" placeholder="xxxxxxxxx-x" required={true}/>
                                 <label htmlFor="id-cedula">Cédula</label>
                             </div>
                             <div className="form-floating mb-3">
-
                                 <input type="text" value={nombres} onChange={handleNombresChange}
                                        className="form-control"
-                                       id="id-nombres" placeholder="Michael"/>
+                                       id="id-nombres" placeholder="Michael" required={true}/>
                                 <label htmlFor="id-nombres">Nombres</label>
                             </div>
                             <div className="form-floating mb-3">
-
                                 <input type="text" value={apellidos} onChange={handleApellidosChange}
                                        className="form-control"
-                                       id="id-apellidos" placeholder="Ponce"/>
+                                       id="id-apellidos" placeholder="Ponce" required={true}/>
                                 <label htmlFor="id-apellidos" className="form-label">Apellidos</label>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="email" value={correo} onChange={handleCorreoChange}
+                                       className="form-control"
+                                       id="id-correo" placeholder="a@mail.com" required={true}/>
+                                <label htmlFor="id-correo" className="form-label">Correo</label>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="number" value={edad} onChange={handleEdadChange}
+                                       className="form-control" min="0"
+                                       id="id-edad" placeholder="25" required={true}/>
+                                <label htmlFor="id-edad" className="form-label">Edad</label>
                             </div>
                             <div className="card-footer bg-transparent text-center border-0">
                                 <button type="submit" className="btn btn-lg btn-outline-info">Guardar</button>

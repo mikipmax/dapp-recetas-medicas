@@ -3,23 +3,24 @@ export class RecetaServicio {
         this.contract = contract;
     }
 
-    async registrarPaciente(cedula, nombres, apellidos, cuentaDoctor) {
-        return this.contract.registrarPaciente(cuentaDoctor, cedula, nombres, apellidos, {from: cuentaDoctor});
+    async registrarPaciente(cedula, nombres, apellidos, correo, edad, cuentaDoctor) {
+        return this.contract.registrarPaciente(cedula, nombres, apellidos, correo, edad, {from: cuentaDoctor});
     }
 
 
-    async getPacientes() {
+    async getPacientes(cuentaDoctor) {
 
-        let pacienteIdActual = await this.contract.pacienteIdActual();
+        let pacientesTotalesPorDoctor = await this.contract.pacientesTotalesPorDoctor(cuentaDoctor);
         let pacientes = [];
-        for (let i = 0; i <= pacienteIdActual.toNumber(); i++) {
-            let paciente = await this.contract.pacientes(i);
-            pacientes.push(paciente)
+        for (let i = 0; i < pacientesTotalesPorDoctor.toNumber(); i++) {
+            let paciente = await this.contract.pacientesPorDoctor(cuentaDoctor, i);
+            pacientes.push(paciente);
         }
         return this.mapPacientes(pacientes);
     }
 
     async getMedico(cuentaDoctor) {
+
         let medico = await this.contract.medicos(cuentaDoctor);
         return {
             cedulaProfesional: medico[0],
@@ -32,10 +33,11 @@ export class RecetaServicio {
     mapPacientes(pacientes) {
         return pacientes.map(paciente => {
             return {
-                cuentaDoctor: paciente[0],
-                cedulaPaciente: paciente[1],
-                nombresPaciente: paciente[2],
-                apellidosPaciente: paciente[3]
+                cedulaPaciente: paciente[0],
+                nombresPaciente: paciente[1],
+                apellidosPaciente: paciente[2],
+                correoPaciente: paciente[3],
+                edadPaciente: paciente[4]
             }
         });
     }

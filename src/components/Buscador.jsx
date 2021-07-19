@@ -11,7 +11,7 @@ const Buscador = ({ onSearch }) => {
         <input
             type="text"
             className="form-control"
-            style={{ width: "240px" }}
+            style={{ width: "100%" }}
             placeholder="Buscar"
             value={search}
             onChange={e => onInputChange(e.target.value)}

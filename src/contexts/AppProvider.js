@@ -3,6 +3,8 @@ import {useEffect, useRef, useState} from "react";
 import getWeb3 from "../web3/getWeb3";
 import RecetaMedicaInstancia from "../receta/RecetaMedicaInstancia";
 import {RecetaServicio} from "../receta/RecetaServicio";
+import toastr from "toastr";
+import 'toastr/build/toastr.min.css';
 
 export default function AppProvider({children}) {
 
@@ -11,21 +13,39 @@ export default function AppProvider({children}) {
     const [pacientes, setPacientes] = useState([]);
     const [medico, setMedico] = useState(undefined);
     const recetaServicio = useRef(null);
-
+    const web3 = useRef(null);
     useEffect(() => {
 
         const inicializacion = async () => {
 
-            let web3 = await getWeb3();
-            let recetaInstancia = await RecetaMedicaInstancia(web3);
+            web3.current = await getWeb3();
+            let recetaInstancia = await RecetaMedicaInstancia(web3.current);
             recetaServicio.current = new RecetaServicio(recetaInstancia);
-            getCuentaActual(web3);
+            getCuentaActual(web3.current);
         }
 
         inicializacion();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const mostrarNotificacion = (tipo, mensaje) => {
+        toastr.options = {
+            positionClass: 'toast-top-right',
+            hideDuration: 300,
+            timeOut: 6000
+        };
+        toastr.clear();
+        tipo === 1 ?
+            setTimeout(() =>
+                toastr.success(mensaje), 300) :
+            setTimeout(() => toastr.error(mensaje), 300)
+        getCuentaActual(web3.current)
+    }
+
+    const insertarNuevaMecicina = () => {
+
+    }
 
     const getMedicinas = () => {
         fetch("medicinas.json")
@@ -35,13 +55,7 @@ export default function AppProvider({children}) {
             });
     };
 
-    const getPacientes = async () => {
-        let pacientes = await recetaServicio.current.getPacientes();
-        console.log(pacientes)
-        setPacientes(pacientes);
-    }
     const getCuentaActual = (provider) => {
-
         let cuentaActual = null;
         provider
             .request({method: 'eth_accounts'})
@@ -59,16 +73,22 @@ export default function AppProvider({children}) {
                 let medicoActual = await recetaServicio.current.getMedico(cuentaActual);
                 setCuenta(cuentaActual);
                 setMedico(medicoActual.nombresMedico + " " + medicoActual.appellidosMedico);
-                await load();
+                let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
+                setPacientes(pacientes);
 
             }
         }
     }
 
-    const load = async () => {
-        getPacientes();
-    }
+    return (<AppContext.Provider value={{
+        getMedicinas,
+        medicinas,
+        pacientes,
+        cuenta,
+        medico,
+        recetaServicio,
+        mostrarNotificacion,
+        insertarNuevaMecicina
 
-
-    return (<AppContext.Provider value={{getMedicinas, medicinas,cuenta, medico, recetaServicio}}>{children}</AppContext.Provider>);
+    }}>{children}</AppContext.Provider>);
 }
