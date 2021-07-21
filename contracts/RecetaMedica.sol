@@ -3,6 +3,18 @@ pragma solidity >=0.7.0 <0.9.0;
 
 contract RecetaMedica {
 
+    struct Receta {
+        Paciente paciente;
+        string diagnostico;
+        string indicacionesExtras;
+        Medicina[] medicinas;
+    }
+
+    struct Rec1 {
+        string diagnostico;
+        Medicina[] medicinas;
+    }
+
     struct Medico {
         string cedulaProfesional;
         string nombres;
@@ -11,6 +23,7 @@ contract RecetaMedica {
     }
 
     struct Paciente {
+        address cuentaPaciente;
         string cedula;
         string nombres;
         string apellidos;
@@ -18,9 +31,21 @@ contract RecetaMedica {
         uint edad;
     }
 
-    Paciente[] public pacientes;
+    struct Medicina {
+        string nombreMedicina;
+        string indicacion;
+    }
+
+    mapping(address => Rec1) public tes;
+    mapping(address => Rec1[]) public recPorDoctor;
+    mapping(address => uint) public recTotalesPorDoctor;
+
+    mapping(address => Receta[]) public recetaPorDoctor;
+    mapping(address => Receta[]) public recetaPorPaciente;
     mapping(address => Paciente[]) public pacientesPorDoctor;
     mapping(address => uint) public pacientesTotalesPorDoctor;
+    mapping(address => uint) public recetasTotalesPorDoctor;
+    mapping(address => uint) public recetasTotalesPorPaciente;
     mapping(address => Medico) public medicos;
 
     constructor(){
@@ -30,13 +55,27 @@ contract RecetaMedica {
     }
 
     function registrarPaciente(
+        address _cuentaPaciente,
         string memory _cedula,
         string memory _nombre,
         string memory _apellido,
         string memory _correo,
-        uint _edad) public {
-        pacientesPorDoctor[msg.sender].push(Paciente(_cedula, _nombre, _apellido, _correo, _edad));
+        uint _edad
+    ) public {
+        pacientesPorDoctor[msg.sender].push(Paciente(_cuentaPaciente, _cedula, _nombre, _apellido, _correo, _edad));
         pacientesTotalesPorDoctor[msg.sender] ++;
     }
 
+    Medicina[]  medicinaAux;
+
+    function registrarReceta(string memory _diagnostico,
+        Medicina[] memory _medicinas
+    ) public {
+        tes[msg.sender].diagnostico = _diagnostico;
+        for (uint j = 0; j < _medicinas.length; j++) {
+            tes[msg.sender].medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
+        }
+        recPorDoctor[msg.sender].push(tes[msg.sender]);
+        recTotalesPorDoctor[msg.sender]++;
+    }
 }

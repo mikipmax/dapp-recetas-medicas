@@ -2,49 +2,45 @@ import React, {useEffect, useState, useMemo, useContext, useRef} from "react";
 import Buscador from "./Buscador";
 import AppContext from "../contexts/AppContext";
 
-const Medicinas = () => {
+const Medicinas = ({handleMecinaAgregada}) => {
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [paginaActual, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [nuevaMedicina, setNuevaMedicina] = useState("");
     const {getMedicinas, medicinas} = useContext(AppContext);
     const indicacion = useRef("");
     const handleNuevaMedicinaChange = ({target: {value}}) => setNuevaMedicina(value);
     const handleIndicacionChange = ({target: {value}}) => indicacion.current = value;
+
     const handleFormularioSubmit = async event => {
         event.preventDefault();
-        insertarMedicina(nuevaMedicina)
+        //++++++++++++++++++++++++++++++++++++++++++
         setNuevaMedicina("");
     }
 
-    const ITEMS_PER_PAGE = 5;
+    const ITEMS_POR_PAGINA = 5;
 
     useEffect(() => {
         getMedicinas();
     }, []);
 
-    const medicinasData = useMemo(() => {
-        let computedComments = medicinas;
+    const datosMedicinas = useMemo(() => {
 
+        let numeroMedicinasCalculadas = medicinas;
         if (search) {
-
-            computedComments = computedComments.filter(
+            numeroMedicinasCalculadas = numeroMedicinasCalculadas.filter(
                 medicina =>
                     medicina.medicina.toLowerCase().includes(search.toLowerCase()) ||
                     medicina.descripcion.toLowerCase().includes(search.toLowerCase())
             );
         }
 
-        //Current Page slice
-        return computedComments.slice(
-            (currentPage - 1) * ITEMS_PER_PAGE,
-            (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+        return numeroMedicinasCalculadas.slice(
+            (paginaActual - 1) * ITEMS_POR_PAGINA,
+            (paginaActual - 1) * ITEMS_POR_PAGINA + ITEMS_POR_PAGINA
         );
-    }, [medicinas, currentPage, search]);
-    const insertarMedicina = (medicina) => {
+    }, [medicinas, paginaActual, search]);
 
-        console.log(medicina.medicina + " " + indicacion.current)
-    }
     return (
 
         <div className="modal fade" id="exampleModal" tabIndex="-1"
@@ -62,12 +58,11 @@ const Medicinas = () => {
                             />
                         </div>
 
-
-                        {medicinasData.length === 0 ?
+                        {datosMedicinas.length === 0 ?
                             <div className="my-4">
                                 <div className="card text-dark border-info mb-3">
-
-                                    <div className="card-header border-info text-center">Agregue la Medicina deseada</div>
+                                    <div className="card-header border-info text-center">Agregue la Medicina deseada
+                                    </div>
                                     <div className="card-body ">
 
                                         <form onSubmit={handleFormularioSubmit}>
@@ -88,30 +83,25 @@ const Medicinas = () => {
                                 </div>
                             </div>
                             :
-                            <table className="table table-striped">
+                            <table className="table">
                                 <thead>
                                 <tr>
-
                                     <th scope="col">Medicinas</th>
                                     <th scope="col">Descripción</th>
                                     <th scope="col">Indicaciones</th>
-                                    <th scope="col">Recetar</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {medicinasData.map(medicina => (
+                                {datosMedicinas.map(medicina => (
                                     <tr key={medicina.id}>
 
                                         <td>{medicina.medicina}</td>
                                         <td>{medicina.descripcion}</td>
                                         <td><input type="text"
-                                                   onChange={handleIndicacionChange} placeholder="Cada hora .."
+                                                   onChange={handleIndicacionChange} onFocus={handleIndicacionChange}
+                                                   onBlur={() =>{indicacion.current!=="" && handleMecinaAgregada(medicina, indicacion.current)}}
+                                                   placeholder="Cada hora .."
                                                    className="form-control"/></td>
-                                        <td>
-                                            <button className="btn btn-primary"
-                                                    onClick={() => insertarMedicina(medicina)}>+
-                                            </button>
-                                        </td>
                                     </tr>
                                 ))}
                                 </tbody>

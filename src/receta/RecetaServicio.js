@@ -3,10 +3,17 @@ export class RecetaServicio {
         this.contract = contract;
     }
 
-    async registrarPaciente(cedula, nombres, apellidos, correo, edad, cuentaDoctor) {
-        return this.contract.registrarPaciente(cedula, nombres, apellidos, correo, edad, {from: cuentaDoctor});
+    async registrarPaciente(cuentaPaciente, cedula, nombres, apellidos, correo, edad, cuentaDoctor) {
+        return this.contract.registrarPaciente(
+            cuentaPaciente === "" ? "0x0000000000000000000000000000000000000000" : cuentaPaciente,
+            cedula, nombres, apellidos, correo, edad, {from: cuentaDoctor});
     }
 
+    async registrarReceta(paciente, cuentaDoctor) {
+        console.log(cuentaDoctor)
+        return this.contract.registrarReceta(paciente,
+            {from: cuentaDoctor});
+    }
 
     async getPacientes(cuentaDoctor) {
 
@@ -33,11 +40,12 @@ export class RecetaServicio {
     mapPacientes(pacientes) {
         return pacientes.map(paciente => {
             return {
-                cedulaPaciente: paciente[0],
-                nombresPaciente: paciente[1],
-                apellidosPaciente: paciente[2],
-                correoPaciente: paciente[3],
-                edadPaciente: paciente[4]
+                cuentaPaciente: paciente [0],
+                cedulaPaciente: paciente[1],
+                nombresPaciente: paciente[2],
+                apellidosPaciente: paciente[3],
+                correoPaciente: paciente[4],
+                edadPaciente: paciente[5]
             }
         });
     }

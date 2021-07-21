@@ -1,4 +1,4 @@
-import {useContext,  useState} from "react";
+import {useContext, useState} from "react";
 
 import AppContext from "../contexts/AppContext";
 
@@ -10,22 +10,25 @@ const RegistroPaciente = () => {
     const [apellidos, setApellidos] = useState("");
     const [correo, setCorreo] = useState("");
     const [edad, setEdad] = useState("");
+    const [cuentaPaciente, setCuentaPaciente] = useState("");
 
-    const {cuenta, recetaServicio, mostrarNotificacion} = useContext(AppContext)
-    const handleCedulaChange = ({target: {value}}) => setCedula(value)
-    const handleNombresChange = ({target: {value}}) => setNombres(value)
-    const handleApellidosChange = ({target: {value}}) => setApellidos(value)
-    const handleCorreoChange = ({target: {value}}) => setCorreo(value)
-    const handleEdadChange = ({target: {value}}) => setEdad(value)
+    const {cuenta, recetaServicio, mostrarNotificacion} = useContext(AppContext);
+    const handleCedulaChange = ({target: {value}}) => setCedula(value);
+    const handleNombresChange = ({target: {value}}) => setNombres(value);
+    const handleApellidosChange = ({target: {value}}) => setApellidos(value);
+    const handleCorreoChange = ({target: {value}}) => setCorreo(value);
+    const handleEdadChange = ({target: {value}}) => setEdad(value);
+    const handleCuentaPacienteChange = ({target: {value}}) => setCuentaPaciente(value);
 
     const handleFormularioSubmit = async event => {
         event.preventDefault();
         try {
-            await recetaServicio.current.registrarPaciente(cedula, nombres, apellidos, correo, edad, cuenta)
+            await recetaServicio.current.registrarPaciente(cuentaPaciente, cedula, nombres, apellidos, correo, edad, cuenta)
             mostrarNotificacion(1, "Paciente creado satisfactoriamente");
         } catch (error) {
             mostrarNotificacion(2, "Algo salió Mal: " + error.message);
         } finally {
+            setCuentaPaciente("");
             setCedula("");
             setNombres("");
             setApellidos("");
@@ -43,6 +46,12 @@ const RegistroPaciente = () => {
                     <div className="card-body ">
 
                         <form onSubmit={handleFormularioSubmit}>
+                            <div className="form-floating mb-3">
+                                <input type="text" value={cuentaPaciente} onChange={handleCuentaPacienteChange}
+                                       className="form-control"
+                                       id="id-cuenta-paciente" placeholder="0x4874846421asdfasdasdfasdf"/>
+                                <label htmlFor="id-cuenta-paciente">Token Público Paciente</label>
+                            </div>
                             <div className="form-floating mb-3">
                                 <input type="text" value={cedula} onChange={handleCedulaChange}
                                        className="form-control"
