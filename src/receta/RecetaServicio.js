@@ -9,10 +9,20 @@ export class RecetaServicio {
             cedula, nombres, apellidos, correo, edad, {from: cuentaDoctor});
     }
 
-    async registrarReceta(paciente, cuentaDoctor) {
-        console.log(cuentaDoctor)
-        return this.contract.registrarReceta(paciente,
+    async registrarReceta(diagnostico, indicacionesExtras, medicinas, cuentaDoctor) {
+        console.log(indicacionesExtras+"+++")
+        return this.contract.registrarReceta(diagnostico, indicacionesExtras, medicinas,
             {from: cuentaDoctor});
+    }
+
+    async getRecetasPorDoctor(cuentaDoctor) {
+        let recTotalesPorDoctor = await this.contract.recTotalesPorDoctor(cuentaDoctor);
+        let recetas = [];
+        for (let i = 0; i < recTotalesPorDoctor.toNumber(); i++) {
+            let receta = await this.contract.getRecetasPorDoctor(cuentaDoctor, i);
+            recetas.push(receta);
+        }
+        console.log(recetas)
     }
 
     async getPacientes(cuentaDoctor) {

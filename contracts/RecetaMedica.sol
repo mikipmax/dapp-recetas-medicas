@@ -12,6 +12,7 @@ contract RecetaMedica {
 
     struct Rec1 {
         string diagnostico;
+        string indicacionesExtras;
         Medicina[] medicinas;
     }
 
@@ -36,10 +37,10 @@ contract RecetaMedica {
         string indicacion;
     }
 
-    mapping(address => Rec1) public tes;
+    mapping(address => Rec1)  private recetaTemporal;
+
     mapping(address => Rec1[]) public recPorDoctor;
     mapping(address => uint) public recTotalesPorDoctor;
-
     mapping(address => Receta[]) public recetaPorDoctor;
     mapping(address => Receta[]) public recetaPorPaciente;
     mapping(address => Paciente[]) public pacientesPorDoctor;
@@ -66,16 +67,28 @@ contract RecetaMedica {
         pacientesTotalesPorDoctor[msg.sender] ++;
     }
 
-    Medicina[]  medicinaAux;
-
-    function registrarReceta(string memory _diagnostico,
+    function registrarReceta(
+        string memory _diagnostico,
+        string memory _indicacionesExtras,
         Medicina[] memory _medicinas
     ) public {
-        tes[msg.sender].diagnostico = _diagnostico;
+        //Dado que, recetaTemporal es variable global se va acumulando por eso se la vacía por cada registro ya que son indep
         for (uint j = 0; j < _medicinas.length; j++) {
-            tes[msg.sender].medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
+            delete recetaTemporal[msg.sender];
         }
-        recPorDoctor[msg.sender].push(tes[msg.sender]);
+        recetaTemporal[msg.sender].diagnostico = _diagnostico;
+        recetaTemporal[msg.sender].indicacionesExtras = _indicacionesExtras;
+        for (uint j = 0; j < _medicinas.length; j++) {
+            recetaTemporal[msg.sender].medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
+        }
+        recPorDoctor[msg.sender].push(recetaTemporal[msg.sender]);
         recTotalesPorDoctor[msg.sender]++;
+    }
+
+    function getRecetasPorDoctor(address cuentaDoctor, uint i) public view returns (string memory, string memory, uint, Medicina[] memory) {
+        return (recPorDoctor[cuentaDoctor][i].diagnostico,
+        recPorDoctor[cuentaDoctor][i].indicacionesExtras,
+        recPorDoctor[cuentaDoctor][i].medicinas.length,
+        recPorDoctor[cuentaDoctor][i].medicinas);
     }
 }

@@ -75,6 +75,7 @@ export default function AppProvider({children}) {
                 setMedico(medicoActual.nombresMedico + " " + medicoActual.appellidosMedico);
                 let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
                 setPacientes(pacientes);
+                await recetaServicio.current.getRecetasPorDoctor(cuentaActual)
 
             }
         }

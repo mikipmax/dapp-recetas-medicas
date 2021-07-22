@@ -33,10 +33,10 @@ const RegistroRecetas = () => {
                 mostrarNotificacion(2, "Debe existir al menos un medicamento recetado");
                 return;
             }
-            console.log(pacienteSeleccionado)
-            await recetaServicio.current.registrarReceta(pacienteSeleccionado, cuenta);
 
             console.log(medicinasRecetadas)
+            await recetaServicio.current.registrarReceta(diagnostico,indicacionesExtras, medicinasRecetadas, cuenta);
+
             console.log(diagnostico + " " + indicacionesExtras)
             mostrarNotificacion(1, "Receta generada satisfactoriamente");
 
