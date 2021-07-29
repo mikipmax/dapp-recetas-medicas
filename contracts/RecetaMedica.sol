@@ -1,19 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
+pragma abicoder v2;
 
 contract RecetaMedica {
 
-    struct Receta {
-        Paciente paciente;
-        string diagnostico;
-        string indicacionesExtras;
-        Medicina[] medicinas;
-    }
-
-    struct Rec1 {
-        string diagnostico;
-        string indicacionesExtras;
-        Medicina[] medicinas;
+    struct Medicina {
+        string nombreMedicina;
+        string indicacion;
     }
 
     struct Medico {
@@ -29,25 +22,32 @@ contract RecetaMedica {
         string nombres;
         string apellidos;
         string correo;
-        uint edad;
+        uint8 edad;
     }
 
-    struct Medicina {
-        string nombreMedicina;
-        string indicacion;
+    struct Receta {
+        Medico medico;
+        Paciente paciente;
+        string diagnostico;
+        string indicacionesExtras;
+        Medicina[] medicinas;
+        uint fecha;
     }
 
-    mapping(address => Rec1)  private recetaTemporal;
+    mapping(address => Medico) public medicos;
 
-    mapping(address => Rec1[]) public recPorDoctor;
-    mapping(address => uint) public recTotalesPorDoctor;
-    mapping(address => Receta[]) public recetaPorDoctor;
-    mapping(address => Receta[]) public recetaPorPaciente;
+    mapping(address => Paciente) public pacientes;
+
+    mapping(address => Receta)  private recetaTemporal;
+
+    mapping(address => Receta[]) public recetasPorDoctor;
+    mapping(address => uint) public recetasTotalesPorDoctor;
+
+    mapping(address => Receta[]) public recetasPorPaciente;
+    mapping(address => uint) public recetasTotalesPorPaciente;
+
     mapping(address => Paciente[]) public pacientesPorDoctor;
     mapping(address => uint) public pacientesTotalesPorDoctor;
-    mapping(address => uint) public recetasTotalesPorDoctor;
-    mapping(address => uint) public recetasTotalesPorPaciente;
-    mapping(address => Medico) public medicos;
 
     constructor(){
         //Doctores pre-existentes
@@ -56,18 +56,19 @@ contract RecetaMedica {
     }
 
     function registrarPaciente(
-        address _cuentaPaciente,
-        string memory _cedula,
-        string memory _nombre,
-        string memory _apellido,
-        string memory _correo,
-        uint _edad
+        Paciente memory _paciente
     ) public {
-        pacientesPorDoctor[msg.sender].push(Paciente(_cuentaPaciente, _cedula, _nombre, _apellido, _correo, _edad));
+        if (_paciente.cuentaPaciente != address(0)) {
+            pacientes[_paciente.cuentaPaciente] = _paciente;
+        }
+
+        pacientesPorDoctor[msg.sender].push(_paciente);
         pacientesTotalesPorDoctor[msg.sender] ++;
     }
 
     function registrarReceta(
+        Medico memory _medico,
+        Paciente memory _paciente,
         string memory _diagnostico,
         string memory _indicacionesExtras,
         Medicina[] memory _medicinas
@@ -76,19 +77,38 @@ contract RecetaMedica {
         for (uint j = 0; j < _medicinas.length; j++) {
             delete recetaTemporal[msg.sender];
         }
+        recetaTemporal[msg.sender].medico = _medico;
+        recetaTemporal[msg.sender].paciente = _paciente;
         recetaTemporal[msg.sender].diagnostico = _diagnostico;
         recetaTemporal[msg.sender].indicacionesExtras = _indicacionesExtras;
+        recetaTemporal[msg.sender].fecha = block.timestamp;
         for (uint j = 0; j < _medicinas.length; j++) {
             recetaTemporal[msg.sender].medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
         }
-        recPorDoctor[msg.sender].push(recetaTemporal[msg.sender]);
-        recTotalesPorDoctor[msg.sender]++;
+        recetasPorDoctor[msg.sender].push(recetaTemporal[msg.sender]);
+        recetasTotalesPorDoctor[msg.sender]++;
+
+        if (_paciente.cuentaPaciente != address(0)) {
+            recetasPorPaciente[_paciente.cuentaPaciente].push(recetaTemporal[msg.sender]);
+            recetasTotalesPorPaciente[_paciente.cuentaPaciente]++;
+        }
     }
 
-    function getRecetasPorDoctor(address cuentaDoctor, uint i) public view returns (string memory, string memory, uint, Medicina[] memory) {
-        return (recPorDoctor[cuentaDoctor][i].diagnostico,
-        recPorDoctor[cuentaDoctor][i].indicacionesExtras,
-        recPorDoctor[cuentaDoctor][i].medicinas.length,
-        recPorDoctor[cuentaDoctor][i].medicinas);
+    function getRecetasPorDoctor(address cuentaDoctor, uint i) public view returns (Medico memory, Paciente memory, string memory, string memory, Medicina[] memory, uint) {
+        return (recetasPorDoctor[cuentaDoctor][i].medico,
+        recetasPorDoctor[cuentaDoctor][i].paciente,
+        recetasPorDoctor[cuentaDoctor][i].diagnostico,
+        recetasPorDoctor[cuentaDoctor][i].indicacionesExtras,
+        recetasPorDoctor[cuentaDoctor][i].medicinas,
+        recetasPorDoctor[cuentaDoctor][i].fecha);
+    }
+
+    function getRecetasPorPaciente(address cuentaPaciente, uint i) public view returns (Medico memory, Paciente memory, string memory, string memory, Medicina[] memory, uint) {
+        return (recetasPorPaciente[cuentaPaciente][i].medico,
+        recetasPorPaciente[cuentaPaciente][i].paciente,
+        recetasPorPaciente[cuentaPaciente][i].diagnostico,
+        recetasPorPaciente[cuentaPaciente][i].indicacionesExtras,
+        recetasPorPaciente[cuentaPaciente][i].medicinas,
+        recetasPorPaciente[cuentaPaciente][i].fecha);
     }
 }

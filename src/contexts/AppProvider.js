@@ -9,9 +9,12 @@ import 'toastr/build/toastr.min.css';
 export default function AppProvider({children}) {
 
     const [medicinas, setMedicinas] = useState([]);
+    const [recetasMedico, setRecetasMedico] = useState([])
+    const [recetasPaciente, setRecetasPaciente] = useState([])
     const [cuenta, setCuenta] = useState(undefined);
     const [pacientes, setPacientes] = useState([]);
-    const [medico, setMedico] = useState(undefined);
+    const [medico, setMedico] = useState(null);
+    const [paciente, setPaciente] = useState(null);
     const recetaServicio = useRef(null);
     const web3 = useRef(null);
     useEffect(() => {
@@ -22,6 +25,7 @@ export default function AppProvider({children}) {
             let recetaInstancia = await RecetaMedicaInstancia(web3.current);
             recetaServicio.current = new RecetaServicio(recetaInstancia);
             getCuentaActual(web3.current);
+            getMedicinas();
         }
 
         inicializacion();
@@ -70,13 +74,19 @@ export default function AppProvider({children}) {
                 console.log('Por favor, conéctese a Metamask.');
             } else if (cuentas[0] !== cuentaActual) {
                 cuentaActual = cuentas[0];
-                let medicoActual = await recetaServicio.current.getMedico(cuentaActual);
                 setCuenta(cuentaActual);
-                setMedico(medicoActual.nombresMedico + " " + medicoActual.appellidosMedico);
+
+                let medicoActual = await recetaServicio.current.getMedico(cuentaActual);
+                setMedico(medicoActual);
                 let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
                 setPacientes(pacientes);
-                await recetaServicio.current.getRecetasPorDoctor(cuentaActual)
+                let recetasPorDoctor = await recetaServicio.current.getRecetasPorDoctor(cuentaActual);
+                setRecetasMedico(recetasPorDoctor);
 
+                let pacienteActual = await recetaServicio.current.getPaciente(cuentaActual);
+                setPaciente(pacienteActual);
+                let recetasPorPaciente = await recetaServicio.current.getRecetasPorPaciente(cuentaActual);
+                setRecetasPaciente(recetasPorPaciente)
             }
         }
     }
@@ -85,8 +95,11 @@ export default function AppProvider({children}) {
         getMedicinas,
         medicinas,
         pacientes,
+        recetasMedico,
+        recetasPaciente,
         cuenta,
         medico,
+        paciente,
         recetaServicio,
         mostrarNotificacion,
         insertarNuevaMecicina

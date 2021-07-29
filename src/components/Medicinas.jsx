@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useMemo, useContext, useRef} from "react";
+import React, {useState, useMemo, useContext, useRef} from "react";
 import Buscador from "./Buscador";
 import AppContext from "../contexts/AppContext";
 
@@ -7,22 +7,21 @@ const Medicinas = ({handleMecinaAgregada}) => {
     const [paginaActual, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
     const [nuevaMedicina, setNuevaMedicina] = useState("");
-    const {getMedicinas, medicinas} = useContext(AppContext);
+    const [nuevaMedicinaIndicacion, setNuevaMedicinaIndicacion] = useState("");
+    const {medicinas} = useContext(AppContext);
     const indicacion = useRef("");
     const handleNuevaMedicinaChange = ({target: {value}}) => setNuevaMedicina(value);
+    const handleNuevaMedicinaIndicacionChange = ({target: {value}}) => setNuevaMedicinaIndicacion(value);
     const handleIndicacionChange = ({target: {value}}) => indicacion.current = value;
 
     const handleFormularioSubmit = async event => {
         event.preventDefault();
-        //++++++++++++++++++++++++++++++++++++++++++
+        handleMecinaAgregada({medicina: nuevaMedicina}, nuevaMedicinaIndicacion);
         setNuevaMedicina("");
+        setNuevaMedicinaIndicacion("");
     }
 
     const ITEMS_POR_PAGINA = 5;
-
-    useEffect(() => {
-        getMedicinas();
-    }, []);
 
     const datosMedicinas = useMemo(() => {
 
@@ -61,7 +60,8 @@ const Medicinas = ({handleMecinaAgregada}) => {
                         {datosMedicinas.length === 0 ?
                             <div className="my-4">
                                 <div className="card text-dark border-info mb-3">
-                                    <div className="card-header border-info text-center">Agregue la Medicina deseada
+                                    <div className="card-header border-info text-center">¿No encontró la medicina que
+                                        buscaba?. Agréguela por favor.
                                     </div>
                                     <div className="card-body ">
 
@@ -73,6 +73,14 @@ const Medicinas = ({handleMecinaAgregada}) => {
                                                        id="id-nueva-medicina" placeholder="Paracetamol"
                                                        required={true}/>
                                                 <label htmlFor="id-nueva-medicina">Medicina</label>
+                                            </div>
+                                            <div className="form-floating mb-3">
+                                                <input type="text" value={nuevaMedicinaIndicacion}
+                                                       onChange={handleNuevaMedicinaIndicacionChange}
+                                                       className="form-control"
+                                                       id="id-nueva-medicina-idicacion" placeholder="Cada ..."
+                                                       required={true}/>
+                                                <label htmlFor="id-nueva-medicina">Indicación</label>
                                             </div>
                                             <div className="card-footer bg-transparent text-center border-0">
                                                 <button type="submit" className="btn btn-lg btn-outline-info">Agregar
@@ -99,7 +107,9 @@ const Medicinas = ({handleMecinaAgregada}) => {
                                         <td>{medicina.descripcion}</td>
                                         <td><input type="text"
                                                    onChange={handleIndicacionChange} onFocus={handleIndicacionChange}
-                                                   onBlur={() =>{indicacion.current!=="" && handleMecinaAgregada(medicina, indicacion.current)}}
+                                                   onBlur={() => {
+                                                       indicacion.current !== "" && handleMecinaAgregada(medicina, indicacion.current)
+                                                   }}
                                                    placeholder="Cada hora .."
                                                    className="form-control"/></td>
                                     </tr>

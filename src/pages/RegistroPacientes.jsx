@@ -23,17 +23,25 @@ const RegistroPaciente = () => {
     const handleFormularioSubmit = async event => {
         event.preventDefault();
         try {
-            await recetaServicio.current.registrarPaciente(cuentaPaciente, cedula, nombres, apellidos, correo, edad, cuenta)
+            let paciente = {
+                cuentaPaciente,
+                cedula,
+                nombres,
+                apellidos,
+                correo,
+                edad
+            }
+
+            await recetaServicio.current.registrarPaciente(Object.values(paciente), cuenta)
             mostrarNotificacion(1, "Paciente creado satisfactoriamente");
-        } catch (error) {
-            mostrarNotificacion(2, "Algo salió Mal: " + error.message);
-        } finally {
             setCuentaPaciente("");
             setCedula("");
             setNombres("");
             setApellidos("");
             setCorreo("");
             setEdad("");
+        } catch (error) {
+            mostrarNotificacion(2, "Algo salió Mal: " + error.message);
         }
     }
 

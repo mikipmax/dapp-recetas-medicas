@@ -4,7 +4,7 @@ import {useContext, useRef, useState} from "react";
 import Select from 'react-select'
 
 const RegistroRecetas = () => {
-    const {pacientes, recetaServicio, mostrarNotificacion, cuenta} = useContext(AppContext);
+    const {pacientes, recetaServicio, mostrarNotificacion, cuenta, medico} = useContext(AppContext);
     const [diagnostico, setDiagnostico] = useState("");
     const [pacienteSeleccionado, setPacienteSeleccionado] = useState(null);
     const [indicacionesExtras, setIndicacionesExtras] = useState("");
@@ -18,6 +18,7 @@ const RegistroRecetas = () => {
     };
 
     const handleMecinaAgregada = (medicina, indicacion) => {
+        console.log(medicina)
         medicinasEnLista.current.set(medicina.medicina, indicacion)
         setMedicinasRecetadas(Array.from(medicinasEnLista.current))
     }
@@ -34,16 +35,15 @@ const RegistroRecetas = () => {
                 return;
             }
 
-            console.log(medicinasRecetadas)
-            await recetaServicio.current.registrarReceta(diagnostico,indicacionesExtras, medicinasRecetadas, cuenta);
-
-            console.log(diagnostico + " " + indicacionesExtras)
+            await recetaServicio.current.registrarReceta(Object.values(medico), Object.values(pacienteSeleccionado.value),
+                diagnostico, indicacionesExtras, medicinasRecetadas, cuenta
+            );
             mostrarNotificacion(1, "Receta generada satisfactoriamente");
-
+            setDiagnostico("");
+            setIndicacionesExtras("");
+            setMedicinasRecetadas([]);
         } catch (error) {
             mostrarNotificacion(2, "Algo salió Mal: " + error.message);
-        } finally {
-
         }
     }
 

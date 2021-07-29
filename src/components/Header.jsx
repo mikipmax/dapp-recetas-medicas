@@ -3,7 +3,8 @@ import {NavLink} from "react-router-dom";
 import AppContext from "../contexts/AppContext";
 
 const Header = () => {
-    const {medico} = useContext(AppContext);
+    const {medico, paciente} = useContext(AppContext);
+
     return (<nav className="navbar sticky-top navbar-expand-lg navbar-light header">
         <div className="container">
 
@@ -18,23 +19,43 @@ const Header = () => {
 
             <div className="collapse navbar-collapse" id="navbarText">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li className="nav-item">
-                        <NavLink className="nav-link" aria-current="page" to="/registroPacientes">Registrar Pacientes</NavLink>
+                    {(medico !== null && medico.cedulaProfesional !== "") &&
+                    <>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" aria-current="page" to="/registroPacientes">Registrar
+                                Pacientes</NavLink>
 
-                    </li>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" aria-current="page" to="/recetasMedico">
+                                Historial Recetas
+                            </NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" aria-current="page" to="/registroRecetas">
+                                Registrar Recetas
+                            </NavLink>
+                        </li>
+                    </>
+                    }
+                    {(paciente !== null && paciente.cedulaPaciente !== "") &&
                     <li className="nav-item">
-                        <NavLink className="nav-link" aria-current="page" to="/recetas">
-                            Recetas
+                        <NavLink className="nav-link" aria-current="page" to="/recetasPaciente">
+                            Historial Recetas
                         </NavLink>
                     </li>
-                    <li className="nav-item">
-                        <NavLink className="nav-link" aria-current="page" to="/registroRecetas">
-                            Registrar Recetas
-                        </NavLink>
-                    </li>
+                    }
                 </ul>
                 <span className="navbar-text">
-                    Bienvenido <strong>{medico}</strong></span>
+                    Bienvenido:
+                    {(medico !== null && medico.cedulaProfesional !== "") &&
+                    <strong>{" " + medico.nombresMedico + " " + medico.apellidosMedico}</strong>
+                    }
+                    {(paciente !== null && paciente.cedulaPaciente !== "") &&
+                    <strong>{" " + paciente.nombresPaciente + " " + paciente.apellidosPaciente}</strong>
+                    }
+                </span>
+
             </div>
         </div>
     </nav>);
