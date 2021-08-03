@@ -1,5 +1,4 @@
 import RecetaMedicaContract from '../artifacts/RecetaMedica.json'
-
 import contract from '@truffle/contract';
 
 const RecetaMedicaInstancia = async (provider) => {
@@ -8,4 +7,5 @@ const RecetaMedicaInstancia = async (provider) => {
     let instancia = await receta.deployed();
     return instancia;
 }
+
 export default RecetaMedicaInstancia;

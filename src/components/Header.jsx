@@ -7,7 +7,6 @@ const Header = () => {
 
     return (<nav className="navbar sticky-top navbar-expand-lg navbar-light header">
         <div className="container">
-
             <img src="./img/Ethereum.ico" alt="Dapp" height="40"/>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,11 +54,11 @@ const Header = () => {
                     <strong>{" " + paciente.nombresPaciente + " " + paciente.apellidosPaciente}</strong>
                     }
                 </span>
-
             </div>
         </div>
     </nav>);
 }
+
 export default Header;
 
 

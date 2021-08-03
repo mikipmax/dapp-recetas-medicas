@@ -1,13 +1,15 @@
 import AppContext from "./AppContext";
 import {useEffect, useRef, useState} from "react";
 import getWeb3 from "../web3/getWeb3";
-import RecetaMedicaInstancia from "../receta/RecetaMedicaInstancia";
-import {RecetaServicio} from "../receta/RecetaServicio";
+import RecetaMedicaInstancia from "../recetaTruffle/RecetaMedicaInstancia";
+import {RecetaServicio} from "../recetaTruffle/RecetaServicio";
 import toastr from "toastr";
 import 'toastr/build/toastr.min.css';
+import {usePDF} from "@react-pdf/renderer";
 
 export default function AppProvider({children}) {
-
+    const [documentoPdf, setDocumentoPdf] = useState();
+    const [instancia, actualizarInstancia] = usePDF({document: documentoPdf});
     const [medicinas, setMedicinas] = useState([]);
     const [recetasMedico, setRecetasMedico] = useState([])
     const [recetasPaciente, setRecetasPaciente] = useState([])
@@ -20,16 +22,22 @@ export default function AppProvider({children}) {
     useEffect(() => {
 
         const inicializacion = async () => {
-
             web3.current = await getWeb3();
             let recetaInstancia = await RecetaMedicaInstancia(web3.current);
             recetaServicio.current = new RecetaServicio(recetaInstancia);
             getCuentaActual(web3.current);
             getMedicinas();
+
+            recetaInstancia.RecetaRegistrada(
+                (error, event) => {
+                    if (error) {
+                        console.log("Algo salió mal " + error)
+                    } else {
+                        getCuentaActual(web3.current);
+                    }
+                })
         }
-
         inicializacion();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -37,7 +45,7 @@ export default function AppProvider({children}) {
         toastr.options = {
             positionClass: 'toast-top-right',
             hideDuration: 300,
-            timeOut: 6000
+            timeOut: 8000
         };
         toastr.clear();
         tipo === 1 ?
@@ -47,8 +55,12 @@ export default function AppProvider({children}) {
         getCuentaActual(web3.current)
     }
 
-    const insertarNuevaMecicina = () => {
-
+    const convertirFecha = (fechaMilisegundos) => {
+        let fechaCompleta = new Date(fechaMilisegundos * 1000);
+        let dia = fechaCompleta.getDate();
+        let mes = fechaCompleta.getMonth() + 1;
+        let anio = fechaCompleta.getFullYear();
+        return (dia + "-" + mes + "-" + anio)
     }
 
     const getMedicinas = () => {
@@ -75,7 +87,6 @@ export default function AppProvider({children}) {
             } else if (cuentas[0] !== cuentaActual) {
                 cuentaActual = cuentas[0];
                 setCuenta(cuentaActual);
-
                 let medicoActual = await recetaServicio.current.getMedico(cuentaActual);
                 setMedico(medicoActual);
                 let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
@@ -102,7 +113,9 @@ export default function AppProvider({children}) {
         paciente,
         recetaServicio,
         mostrarNotificacion,
-        insertarNuevaMecicina
-
+        convertirFecha,
+        setDocumentoPdf,
+        instancia,
+        actualizarInstancia
     }}>{children}</AppContext.Provider>);
 }

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
-pragma abicoder v2;
 
 contract RecetaMedica {
+
+    //************************** Estructuras que simulan los actores de las prescripciones médicas *********************
 
     struct Medicina {
         string nombreMedicina;
@@ -22,6 +23,7 @@ contract RecetaMedica {
         string nombres;
         string apellidos;
         string correo;
+        string celular;
         uint8 edad;
     }
 
@@ -32,7 +34,11 @@ contract RecetaMedica {
         string indicacionesExtras;
         Medicina[] medicinas;
         uint fecha;
+        uint fechaCaducidad;
+        address tokenMedico;
     }
+
+    //****** Arreglos de tipo Map en donde se almacena la información en el proceso de preescripciones médicas *********
 
     mapping(address => Medico) public medicos;
 
@@ -49,15 +55,37 @@ contract RecetaMedica {
     mapping(address => Paciente[]) public pacientesPorDoctor;
     mapping(address => uint) public pacientesTotalesPorDoctor;
 
+    //************ Evento que reacciona al momento de registrar una receta para cualesquier paciente *******************
+
+    event RecetaRegistrada(string nombresMedico, string apellidosMedico, address cuentaPaciente);
+
+    //************************ Constructor del contrato que establece médicos predeterminados **************************
+
     constructor(){
         //Doctores pre-existentes
         medicos[0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3] = Medico("11111111", "Patricio", "Estrella", "General");
         medicos[0xF5B223A069ebfDc5D491b94fB50C8be0B063CB65] = Medico("22222222", "Bob", "Sponja", "General");
     }
 
+    //****************** Funciones que contienen la lógica del proceso de preescripciones médicas **********************
+
     function registrarPaciente(
         Paciente memory _paciente
     ) public {
+        bool existe = false;
+        for (uint i = 0; i < pacientesTotalesPorDoctor[msg.sender]; i++) {
+            //Se valida en caso de que el paciente tenga ya un address asociado
+            //además, se emplea && ya que, puede darse el caso en que, la cédula de un _paciente
+            // ya se ha registrado pero aun no tiene cuenta en la red.
+            if (pacientesPorDoctor[msg.sender][i].cuentaPaciente == _paciente.cuentaPaciente
+                && keccak256(abi.encodePacked(pacientesPorDoctor[msg.sender][i].cedula)) ==
+                keccak256(abi.encodePacked(_paciente.cedula))) {
+                existe = true;
+                break;
+            }
+
+        }
+        require(!existe, 'El paciente ya ha sido registrado en su cuenta');
         if (_paciente.cuentaPaciente != address(0)) {
             pacientes[_paciente.cuentaPaciente] = _paciente;
         }
@@ -71,17 +99,20 @@ contract RecetaMedica {
         Paciente memory _paciente,
         string memory _diagnostico,
         string memory _indicacionesExtras,
-        Medicina[] memory _medicinas
+        Medicina[] memory _medicinas,
+        uint _fechaCaducidad
     ) public {
         //Dado que, recetaTemporal es variable global se va acumulando por eso se la vacía por cada registro ya que son indep
         for (uint j = 0; j < _medicinas.length; j++) {
             delete recetaTemporal[msg.sender];
         }
+        recetaTemporal[msg.sender].tokenMedico = msg.sender;
         recetaTemporal[msg.sender].medico = _medico;
         recetaTemporal[msg.sender].paciente = _paciente;
         recetaTemporal[msg.sender].diagnostico = _diagnostico;
         recetaTemporal[msg.sender].indicacionesExtras = _indicacionesExtras;
         recetaTemporal[msg.sender].fecha = block.timestamp;
+        recetaTemporal[msg.sender].fechaCaducidad = _fechaCaducidad;
         for (uint j = 0; j < _medicinas.length; j++) {
             recetaTemporal[msg.sender].medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
         }
@@ -91,24 +122,19 @@ contract RecetaMedica {
         if (_paciente.cuentaPaciente != address(0)) {
             recetasPorPaciente[_paciente.cuentaPaciente].push(recetaTemporal[msg.sender]);
             recetasTotalesPorPaciente[_paciente.cuentaPaciente]++;
+            emit RecetaRegistrada(_medico.nombres, _medico.apellidos, _paciente.cuentaPaciente);
         }
+
     }
 
-    function getRecetasPorDoctor(address cuentaDoctor, uint i) public view returns (Medico memory, Paciente memory, string memory, string memory, Medicina[] memory, uint) {
-        return (recetasPorDoctor[cuentaDoctor][i].medico,
-        recetasPorDoctor[cuentaDoctor][i].paciente,
-        recetasPorDoctor[cuentaDoctor][i].diagnostico,
-        recetasPorDoctor[cuentaDoctor][i].indicacionesExtras,
-        recetasPorDoctor[cuentaDoctor][i].medicinas,
-        recetasPorDoctor[cuentaDoctor][i].fecha);
+    function getRecetasPorDoctor(address cuentaDoctor, uint i)
+    public view returns (Receta memory) {
+        return (recetasPorDoctor[cuentaDoctor][i]);
     }
 
-    function getRecetasPorPaciente(address cuentaPaciente, uint i) public view returns (Medico memory, Paciente memory, string memory, string memory, Medicina[] memory, uint) {
-        return (recetasPorPaciente[cuentaPaciente][i].medico,
-        recetasPorPaciente[cuentaPaciente][i].paciente,
-        recetasPorPaciente[cuentaPaciente][i].diagnostico,
-        recetasPorPaciente[cuentaPaciente][i].indicacionesExtras,
-        recetasPorPaciente[cuentaPaciente][i].medicinas,
-        recetasPorPaciente[cuentaPaciente][i].fecha);
+    function getRecetasPorPaciente(address cuentaPaciente, uint i)
+    public view returns (Receta memory) {
+        return (recetasPorPaciente[cuentaPaciente][i]);
     }
+
 }

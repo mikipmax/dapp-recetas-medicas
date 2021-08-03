@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 const Buscador = ({ onSearch }) => {
-    const [search, setSearch] = useState("");
+    const [busqueda, setBusqueda] = useState("");
 
     const onInputChange = value => {
-        setSearch(value);
+        setBusqueda(value);
         onSearch(value);
     };
     return (
@@ -13,7 +13,7 @@ const Buscador = ({ onSearch }) => {
             className="form-control"
             style={{ width: "100%" }}
             placeholder="Buscar"
-            value={search}
+            value={busqueda}
             onChange={e => onInputChange(e.target.value)}
         />
     );

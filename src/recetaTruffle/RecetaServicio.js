@@ -10,10 +10,9 @@ export class RecetaServicio {
         return this.contract.registrarPaciente(paciente, {from: cuentaDoctor});
     }
 
-    async registrarReceta(medico, paciente, diagnostico, indicacionesExtras, medicinas, cuentaDoctor) {
-
+    async registrarReceta(medico, paciente, diagnostico, indicacionesExtras, medicinas, fechaCaducidad, cuentaDoctor) {
         return this.contract.registrarReceta(medico, paciente, diagnostico, indicacionesExtras, medicinas,
-            {from: cuentaDoctor});
+            fechaCaducidad, {from: cuentaDoctor});
     }
 
     async getRecetasPorDoctor(cuentaDoctor) {
@@ -24,7 +23,7 @@ export class RecetaServicio {
             recetas.push(receta);
         }
 
-        return this.mapRecetas(recetas);
+        return recetas;
     }
 
     async getRecetasPorPaciente(cuentaPaciente) {
@@ -35,7 +34,7 @@ export class RecetaServicio {
             recetas.push(receta);
         }
 
-        return this.mapRecetas(recetas);
+        return recetas;
     }
 
     async getPacientes(cuentaDoctor) {
@@ -53,7 +52,6 @@ export class RecetaServicio {
     async getMedico(cuentaDoctor) {
 
         let medico = await this.contract.medicos(cuentaDoctor);
-
         return {
             cedulaProfesional: medico[0],
             nombresMedico: medico[1],
@@ -65,46 +63,29 @@ export class RecetaServicio {
     async getPaciente(cuentaPaciente) {
 
         let paciente = await this.contract.pacientes(cuentaPaciente);
-
         return {
-            cuentaPaciente: paciente [0],
+            cuentaPaciente: paciente[0],
             cedulaPaciente: paciente[1],
             nombresPaciente: paciente[2],
             apellidosPaciente: paciente[3],
             correoPaciente: paciente[4],
-            edadPaciente: paciente[5].toNumber()
+            celularPaciente: paciente[5],
+            edadPaciente: paciente[6].toNumber()
         };
     }
 
     mapPacientes(pacientes) {
         return pacientes.map(paciente => {
             return {
-                cuentaPaciente: paciente [0],
+                cuentaPaciente: paciente[0],
                 cedulaPaciente: paciente[1],
                 nombresPaciente: paciente[2],
                 apellidosPaciente: paciente[3],
                 correoPaciente: paciente[4],
-                edadPaciente: paciente[5].toNumber()
+                celularPaciente: paciente[5],
+                edadPaciente: paciente[6].toNumber()
             }
         });
     }
 
-    mapRecetas(recetas) {
-        return recetas.map(receta => {
-            let medicinasFormatoSolidity = receta [4];
-            let listaMedicinaPorReceta = []
-            medicinasFormatoSolidity.forEach(x => listaMedicinaPorReceta.push({
-                nombreMedicina: x.nombreMedicina,
-                indicacionMedicina: x.indicacionMedicina
-            }))
-            return {
-                medico: receta [0],
-                paciente: receta[1],
-                diagnostico: receta [2],
-                indicacionesExtras: receta [3],
-                medicinas: receta[4],
-                fecha: receta[5].toNumber()
-            }
-        });
-    }
 }

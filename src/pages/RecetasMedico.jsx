@@ -1,28 +1,61 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 import AppContext from "../contexts/AppContext";
-import MyDocument from "./MyApp";
-import {PDFDownloadLink, usePDF, Document, Page, View, Text} from "@react-pdf/renderer";
+import GenerarPdf from "../components/GenerarPdf";
+import QRCode from "qrcode.react"
+import Buscador from "../components/Buscador";
 
 const RecetasMedico = () => {
-    const [datos, setDatos] = useState();
+    const [search, setSearch] = useState("");
+    const datosPdf = useRef(null);
 
-    const {recetasMedico} = useContext(AppContext);
-    const [instance, updateInstance] = usePDF({document: datos});
-    const convertirFecha = (fechaMilisegundos) => {
-        return new Date(fechaMilisegundos * 1000).toLocaleString();
-    }
-    const datosPdf = useRef("");
-    useEffect(updateInstance, [datosPdf.current]);
-    const handleClick = (diagnostico) => {
-        console.log(diagnostico)
-        datosPdf.current = (diagnostico);
-        setDatos(<MyDocument data={datosPdf.current}/>);
+    const {
+        recetasMedico,
+        cuenta,
+        convertirFecha,
+        setDocumentoPdf,
+        instancia,
+        actualizarInstancia
+    } = useContext(AppContext);
+
+    useEffect(() => {
+            actualizarInstancia()
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [datosPdf.current]
+    );
+
+    const datosRecetas = useMemo(() => {
+        let recetasMedicoAux = recetasMedico;
+        if (search) {
+            recetasMedicoAux = recetasMedicoAux.filter(
+                receta =>
+                    receta.paciente.cedula.toLowerCase().includes(search.toLowerCase())
+                    || receta.paciente.nombres.toLowerCase().includes(search.toLowerCase())
+                    || receta.paciente.apellidos.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+        return recetasMedicoAux;
+    }, [recetasMedico, search]);
+
+    const handleMouseOver = (receta) => {
+        datosPdf.current = receta;
+        setDocumentoPdf(<GenerarPdf receta={datosPdf.current}/>);
     };
+
     return (<div className="container my-5">
 
         <div className="col-md-10 offset-md-1">
             <div className="card text-dark border-0 mb-3">
                 <div className="card-body ">
+                    <div className="d-flex flex-row-reverse">
+                        <Buscador
+                            onSearch={value => {
+                                setSearch(value);
+                            }}
+                        />
+                    </div>
+                    <br/>
+                    <QRCode value={cuenta} id="qr_cuenta" hidden/>
                     <table className="table table-responsive table-bordered border-info">
                         <thead>
                         <tr>
@@ -35,11 +68,17 @@ const RecetasMedico = () => {
                         </tr>
                         </thead>
                         <tbody>
-
-                        {recetasMedico.map((receta, i) => (
+                        {datosRecetas.map((receta, i) => (
                             <tr key={i}>
-
-                                <td>{convertirFecha(receta.fecha)}</td>
+                                <td>
+                                    <ul className="list-group list-group-flush">
+                                        <li className="list-group-item border-0">
+                                            <b>Emisión: </b><br/>{convertirFecha(receta.fecha)}
+                                        </li>
+                                        <li className="list-group-item border-0">
+                                            <b>Vencimiento: </b>{convertirFecha(receta.fechaCaducidad)} </li>
+                                    </ul>
+                                </td>
                                 <td>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item border-0"><b>Cédula: </b>{receta.paciente.cedula}
@@ -76,9 +115,9 @@ const RecetasMedico = () => {
                                 </td>
                                 <td>{receta.indicacionesExtras}</td>
                                 <td>
-                                    {instance.loading ? <div>Cargando ...</div> :
-                                        <a className="link-danger btn" href={instance.url}
-                                           onMouseOver={() => handleClick(receta.diagnostico)}
+                                    {instancia.loading ? <div>Cargando ...</div> :
+                                        <a className="link-danger btn" href={instancia.url}
+                                           onMouseOver={() => handleMouseOver(receta)}
                                            download={"Receta " + receta.paciente.nombres + " " + receta.paciente.apellidos + ".pdf"}>
                                             Descargar
                                         </a>}
@@ -90,7 +129,7 @@ const RecetasMedico = () => {
                 </div>
             </div>
         </div>
-
     </div>)
 }
+
 export default RecetasMedico;

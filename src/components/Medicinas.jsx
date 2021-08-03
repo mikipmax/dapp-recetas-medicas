@@ -4,8 +4,8 @@ import AppContext from "../contexts/AppContext";
 
 const Medicinas = ({handleMecinaAgregada}) => {
 
-    const [paginaActual, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState("");
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [busqueda, setBusqueda] = useState("");
     const [nuevaMedicina, setNuevaMedicina] = useState("");
     const [nuevaMedicinaIndicacion, setNuevaMedicinaIndicacion] = useState("");
     const {medicinas} = useContext(AppContext);
@@ -25,25 +25,25 @@ const Medicinas = ({handleMecinaAgregada}) => {
 
     const datosMedicinas = useMemo(() => {
 
-        let numeroMedicinasCalculadas = medicinas;
-        if (search) {
-            numeroMedicinasCalculadas = numeroMedicinasCalculadas.filter(
+        let medicinasAux = medicinas;
+        if (busqueda) {
+            medicinasAux = medicinasAux.filter(
                 medicina =>
-                    medicina.medicina.toLowerCase().includes(search.toLowerCase()) ||
-                    medicina.descripcion.toLowerCase().includes(search.toLowerCase())
+                    medicina.medicina.toLowerCase().includes(busqueda.toLowerCase()) ||
+                    medicina.descripcion.toLowerCase().includes(busqueda.toLowerCase())
             );
         }
 
-        return numeroMedicinasCalculadas.slice(
+        return medicinasAux.slice(
             (paginaActual - 1) * ITEMS_POR_PAGINA,
             (paginaActual - 1) * ITEMS_POR_PAGINA + ITEMS_POR_PAGINA
         );
-    }, [medicinas, paginaActual, search]);
+    }, [medicinas, paginaActual, busqueda]);
 
     return (
 
-        <div className="modal fade" id="exampleModal" tabIndex="-1"
-             aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade" id="modalMedicinas" tabIndex="-1"
+             aria-labelledby="modalMedicinasLabel" aria-hidden="true">
             <div className="modal-dialog modal-xl">
                 <div className="modal-content">
 
@@ -51,12 +51,11 @@ const Medicinas = ({handleMecinaAgregada}) => {
                         <div className="d-flex flex-row-reverse">
                             <Buscador
                                 onSearch={value => {
-                                    setSearch(value);
-                                    setCurrentPage(1);
+                                    setBusqueda(value);
+                                    setPaginaActual(1);
                                 }}
                             />
                         </div>
-
                         {datosMedicinas.length === 0 ?
                             <div className="my-4">
                                 <div className="card text-dark border-info mb-3">
@@ -102,7 +101,6 @@ const Medicinas = ({handleMecinaAgregada}) => {
                                 <tbody>
                                 {datosMedicinas.map(medicina => (
                                     <tr key={medicina.id}>
-
                                         <td>{medicina.medicina}</td>
                                         <td>{medicina.descripcion}</td>
                                         <td><input type="text"
@@ -110,7 +108,7 @@ const Medicinas = ({handleMecinaAgregada}) => {
                                                    onBlur={() => {
                                                        indicacion.current !== "" && handleMecinaAgregada(medicina, indicacion.current)
                                                    }}
-                                                   placeholder="Cada hora .."
+                                                   placeholder="10 Und. 1 Cada hora"
                                                    className="form-control"/></td>
                                     </tr>
                                 ))}
@@ -122,7 +120,6 @@ const Medicinas = ({handleMecinaAgregada}) => {
                 </div>
             </div>
         </div>
-
     );
 };
 
