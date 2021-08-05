@@ -28,6 +28,7 @@ contract RecetaMedica {
     }
 
     struct Receta {
+        uint id;
         Medico medico;
         Paciente paciente;
         string diagnostico;
@@ -44,13 +45,7 @@ contract RecetaMedica {
 
     mapping(address => Paciente) public pacientes;
 
-    mapping(address => Receta)  private recetaTemporal;
-
-    mapping(address => Receta[]) public recetasPorDoctor;
-    mapping(address => uint) public recetasTotalesPorDoctor;
-
-    mapping(address => Receta[]) public recetasPorPaciente;
-    mapping(address => uint) public recetasTotalesPorPaciente;
+    Receta[] public recetas;
 
     mapping(address => Paciente[]) public pacientesPorDoctor;
     mapping(address => uint) public pacientesTotalesPorDoctor;
@@ -72,20 +67,15 @@ contract RecetaMedica {
     function registrarPaciente(
         Paciente memory _paciente
     ) public {
-        bool existe = false;
         for (uint i = 0; i < pacientesTotalesPorDoctor[msg.sender]; i++) {
             //Se valida en caso de que el paciente tenga ya un address asociado
             //además, se emplea && ya que, puede darse el caso en que, la cédula de un _paciente
             // ya se ha registrado pero aun no tiene cuenta en la red.
-            if (pacientesPorDoctor[msg.sender][i].cuentaPaciente == _paciente.cuentaPaciente
-                && keccak256(abi.encodePacked(pacientesPorDoctor[msg.sender][i].cedula)) ==
-                keccak256(abi.encodePacked(_paciente.cedula))) {
-                existe = true;
-                break;
-            }
-
+            require(!(pacientesPorDoctor[msg.sender][i].cuentaPaciente == _paciente.cuentaPaciente
+            && keccak256(abi.encodePacked(pacientesPorDoctor[msg.sender][i].cedula)) ==
+            keccak256(abi.encodePacked(_paciente.cedula))), 'El paciente ya ha sido registrado en su cuenta');
         }
-        require(!existe, 'El paciente ya ha sido registrado en su cuenta');
+
         if (_paciente.cuentaPaciente != address(0)) {
             pacientes[_paciente.cuentaPaciente] = _paciente;
         }
@@ -93,6 +83,8 @@ contract RecetaMedica {
         pacientesPorDoctor[msg.sender].push(_paciente);
         pacientesTotalesPorDoctor[msg.sender] ++;
     }
+
+    Receta private receta;
 
     function registrarReceta(
         Medico memory _medico,
@@ -102,39 +94,36 @@ contract RecetaMedica {
         Medicina[] memory _medicinas,
         uint _fechaCaducidad
     ) public {
-        //Dado que, recetaTemporal es variable global se va acumulando por eso se la vacía por cada registro ya que son indep
-        for (uint j = 0; j < _medicinas.length; j++) {
-            delete recetaTemporal[msg.sender];
-        }
-        recetaTemporal[msg.sender].tokenMedico = msg.sender;
-        recetaTemporal[msg.sender].medico = _medico;
-        recetaTemporal[msg.sender].paciente = _paciente;
-        recetaTemporal[msg.sender].diagnostico = _diagnostico;
-        recetaTemporal[msg.sender].indicacionesExtras = _indicacionesExtras;
-        recetaTemporal[msg.sender].fecha = block.timestamp;
-        recetaTemporal[msg.sender].fechaCaducidad = _fechaCaducidad;
-        for (uint j = 0; j < _medicinas.length; j++) {
-            recetaTemporal[msg.sender].medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
-        }
-        recetasPorDoctor[msg.sender].push(recetaTemporal[msg.sender]);
-        recetasTotalesPorDoctor[msg.sender]++;
 
-        if (_paciente.cuentaPaciente != address(0)) {
-            recetasPorPaciente[_paciente.cuentaPaciente].push(recetaTemporal[msg.sender]);
-            recetasTotalesPorPaciente[_paciente.cuentaPaciente]++;
-            emit RecetaRegistrada(_medico.nombres, _medico.apellidos, _paciente.cuentaPaciente);
+        receta.id = recetas.length;
+        receta.tokenMedico = msg.sender;
+        receta.medico = _medico;
+        receta.paciente = _paciente;
+        receta.diagnostico = _diagnostico;
+        receta.indicacionesExtras = _indicacionesExtras;
+        receta.fecha = block.timestamp;
+        receta.fechaCaducidad = _fechaCaducidad;
+        for (uint j = 0; j < _medicinas.length; j++) {
+            receta.medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
         }
-
+        recetas.push(receta);
+        emit RecetaRegistrada(_medico.nombres, _medico.apellidos, _paciente.cuentaPaciente);
     }
 
-    function getRecetasPorDoctor(address cuentaDoctor, uint i)
-    public view returns (Receta memory) {
-        return (recetasPorDoctor[cuentaDoctor][i]);
+    function getRecetas(address cuenta, bool isMedico)
+    public view returns (Receta[] memory) {
+        Receta[] memory recetasTemp;
+        for (uint i = 0; i < recetas.length; i++) {
+            if (isMedico ? recetas[i].tokenMedico == cuenta :
+                recetas[i].paciente.cuentaPaciente == cuenta) {
+                recetasTemp[i] = recetas[i];
+            }
+        }
+        return recetasTemp;
     }
 
-    function getRecetasPorPaciente(address cuentaPaciente, uint i)
-    public view returns (Receta memory) {
-        return (recetasPorPaciente[cuentaPaciente][i]);
+    function eliminarReceta(uint idReceta) public {
+        delete recetas[idReceta];
     }
 
 }

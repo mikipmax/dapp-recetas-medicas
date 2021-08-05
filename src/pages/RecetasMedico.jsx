@@ -59,6 +59,7 @@ const RecetasMedico = () => {
                     <table className="table table-responsive table-bordered border-info">
                         <thead>
                         <tr>
+                            <th scope="col">id</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Paciente</th>
                             <th scope="col">Diagnóstico</th>
@@ -70,6 +71,7 @@ const RecetasMedico = () => {
                         <tbody>
                         {datosRecetas.map((receta, i) => (
                             <tr key={i}>
+                                <td>{receta.id}</td>
                                 <td>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item border-0">
