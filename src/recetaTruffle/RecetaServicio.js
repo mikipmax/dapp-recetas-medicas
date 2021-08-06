@@ -16,25 +16,22 @@ export class RecetaServicio {
     }
 
     async getRecetasPorDoctor(cuentaDoctor) {
-        let recetasTotalesPorDoctor = await this.contract.recetasTotalesPorDoctor(cuentaDoctor);
-        let recetas = [];
-        for (let i = 0; i < recetasTotalesPorDoctor.toNumber(); i++) {
-            let receta = await this.contract.getRecetasPorDoctor(cuentaDoctor, i);
-            recetas.push(receta);
-        }
 
+        let recetas = await this.contract.getRecetas(cuentaDoctor, true);
         return recetas;
     }
 
     async getRecetasPorPaciente(cuentaPaciente) {
-        let recetasTotalesPorPaciente = await this.contract.recetasTotalesPorPaciente(cuentaPaciente);
-        let recetas = [];
-        for (let i = 0; i < recetasTotalesPorPaciente.toNumber(); i++) {
-            let receta = await this.contract.getRecetasPorPaciente(cuentaPaciente, i);
-            recetas.push(receta);
-        }
-
+        let recetas = await this.contract.getRecetas(cuentaPaciente, false);
         return recetas;
+    }
+
+    async eliminarReceta(id, cuentaMedico) {
+        return this.contract.eliminarReceta(id, {from: cuentaMedico});
+    }
+
+    async despacharReceta(id, cuentaFarmaceutico) {
+        return this.contract.despacharReceta(id, {from: cuentaFarmaceutico});
     }
 
     async getPacientes(cuentaDoctor) {

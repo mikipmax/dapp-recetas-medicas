@@ -71,6 +71,11 @@ export default function AppProvider({children}) {
             });
     };
 
+    const getRecetasPorMedico = async cuentaActual => {
+        let recetasPorDoctor = await recetaServicio.current.getRecetasPorDoctor(cuentaActual);
+        setRecetasMedico(recetasPorDoctor);
+    }
+
     const getCuentaActual = (provider) => {
         let cuentaActual = null;
         provider
@@ -91,8 +96,7 @@ export default function AppProvider({children}) {
                 setMedico(medicoActual);
                 let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
                 setPacientes(pacientes);
-                let recetasPorDoctor = await recetaServicio.current.getRecetasPorDoctor(cuentaActual);
-                setRecetasMedico(recetasPorDoctor);
+                await getRecetasPorMedico(cuentaActual);
 
                 let pacienteActual = await recetaServicio.current.getPaciente(cuentaActual);
                 setPaciente(pacienteActual);
@@ -103,10 +107,10 @@ export default function AppProvider({children}) {
     }
 
     return (<AppContext.Provider value={{
-        getMedicinas,
         medicinas,
         pacientes,
         recetasMedico,
+        getRecetasPorMedico,
         recetasPaciente,
         cuenta,
         medico,

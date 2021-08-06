@@ -37,6 +37,7 @@ contract RecetaMedica {
         uint fecha;
         uint fechaCaducidad;
         address tokenMedico;
+        bool isDespachado;
     }
 
     //****** Arreglos de tipo Map en donde se almacena la información en el proceso de preescripciones médicas *********
@@ -103,6 +104,7 @@ contract RecetaMedica {
         receta.indicacionesExtras = _indicacionesExtras;
         receta.fecha = block.timestamp;
         receta.fechaCaducidad = _fechaCaducidad;
+        delete receta.medicinas;
         for (uint j = 0; j < _medicinas.length; j++) {
             receta.medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
         }
@@ -112,18 +114,29 @@ contract RecetaMedica {
 
     function getRecetas(address cuenta, bool isMedico)
     public view returns (Receta[] memory) {
-        Receta[] memory recetasTemp;
+        Receta[] memory recetasAux = new Receta[](recetas.length);
+        uint contador = 0;
         for (uint i = 0; i < recetas.length; i++) {
             if (isMedico ? recetas[i].tokenMedico == cuenta :
                 recetas[i].paciente.cuentaPaciente == cuenta) {
-                recetasTemp[i] = recetas[i];
+                recetasAux[contador] = recetas[i];
+                contador++;
             }
         }
-        return recetasTemp;
+        //Eliminamos los indices que contienen recetas con valores vacios
+        Receta[] memory recetas = new Receta[](contador);
+        for (uint i = 0; i < contador; i++) {
+            recetas[i] = recetasAux[i];
+        }
+        return recetas;
     }
 
     function eliminarReceta(uint idReceta) public {
         delete recetas[idReceta];
+    }
+
+    function despacharReceta(uint idReceta) public {
+        recetas[idReceta].isDespachado = true;
     }
 
 }

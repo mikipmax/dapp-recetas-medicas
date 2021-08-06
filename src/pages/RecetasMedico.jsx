@@ -10,11 +10,14 @@ const RecetasMedico = () => {
 
     const {
         recetasMedico,
+        getRecetasPorMedico,
         cuenta,
         convertirFecha,
         setDocumentoPdf,
         instancia,
-        actualizarInstancia
+        actualizarInstancia,
+        recetaServicio,
+        mostrarNotificacion
     } = useContext(AppContext);
 
     useEffect(() => {
@@ -42,6 +45,17 @@ const RecetasMedico = () => {
         setDocumentoPdf(<GenerarPdf receta={datosPdf.current}/>);
     };
 
+    const handleClick = async idReceta => {
+        try {
+            await recetaServicio.current.eliminarReceta(idReceta, cuenta);
+            await getRecetasPorMedico(cuenta);
+            mostrarNotificacion(1, "Receta eliminada satisfactoriamente");
+        } catch (error) {
+            mostrarNotificacion(2, "Algo salió Mal: " + error.message);
+        }
+
+    }
+
     return (<div className="container my-5">
 
         <div className="col-md-10 offset-md-1">
@@ -59,19 +73,19 @@ const RecetasMedico = () => {
                     <table className="table table-responsive table-bordered border-info">
                         <thead>
                         <tr>
-                            <th scope="col">id</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Paciente</th>
                             <th scope="col">Diagnóstico</th>
                             <th scope="col">Medicinas</th>
                             <th scope="col">Indicaciones Extras</th>
+                            <th scope="col">Estado</th>
                             <th scope="col">Generar PDF</th>
+                            <th scope="col">Opción</th>
                         </tr>
                         </thead>
                         <tbody>
                         {datosRecetas.map((receta, i) => (
                             <tr key={i}>
-                                <td>{receta.id}</td>
                                 <td>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item border-0">
@@ -116,13 +130,19 @@ const RecetasMedico = () => {
                                     </table>
                                 </td>
                                 <td>{receta.indicacionesExtras}</td>
+                                <td>{receta.isDespachado ? "Despachado" : "Por Despachar"}</td>
                                 <td>
                                     {instancia.loading ? <div>Cargando ...</div> :
-                                        <a className="link-danger btn" href={instancia.url}
+                                        <a className="link-info btn" href={instancia.url}
                                            onMouseOver={() => handleMouseOver(receta)}
                                            download={"Receta " + receta.paciente.nombres + " " + receta.paciente.apellidos + ".pdf"}>
                                             Descargar
                                         </a>}
+                                </td>
+                                <td>
+                                    <button type="button" className="btn link-danger"
+                                            onClick={() => handleClick(receta.id)}>Eliminar
+                                    </button>
                                 </td>
                             </tr>
                         ))}
