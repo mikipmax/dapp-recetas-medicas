@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d561656c-ec53-4739-8f94-d3b3d1451452" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/pages/DespachoRecetas.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/RecetaMedica.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/RecetaMedica.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/artifacts/Migrations.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/artifacts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/Migrations.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/contexts/AppProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/contexts/AppProvider.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/RecetasMedico.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/RecetasMedico.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/recetaTruffle/RecetaServicio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/recetaTruffle/RecetaServicio.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/AppRouter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/AppRouter.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,13 +67,15 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.start">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -142,6 +148,7 @@
       <workItem from="1628033258672" duration="14263000" />
       <workItem from="1628121938435" duration="10790000" />
       <workItem from="1628206575893" duration="16880000" />
+      <workItem from="1628280674953" duration="13177000" />
     </task>
     <servers />
   </component>

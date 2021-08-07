@@ -27,6 +27,11 @@ contract RecetaMedica {
         uint8 edad;
     }
 
+    struct Farmaceutico {
+        string ruc;
+        string nombreComercial;
+    }
+
     struct Receta {
         uint id;
         Medico medico;
@@ -46,21 +51,24 @@ contract RecetaMedica {
 
     mapping(address => Paciente) public pacientes;
 
-    Receta[] public recetas;
+    Receta[] private recetas;
 
     mapping(address => Paciente[]) public pacientesPorDoctor;
     mapping(address => uint) public pacientesTotalesPorDoctor;
 
+    mapping(address => Farmaceutico) public farmaceuticos;
     //************ Evento que reacciona al momento de registrar una receta para cualesquier paciente *******************
 
     event RecetaRegistrada(string nombresMedico, string apellidosMedico, address cuentaPaciente);
 
-    //************************ Constructor del contrato que establece médicos predeterminados **************************
+    //************************ Constructor del contrato que establece datos predeterminados **************************
 
     constructor(){
         //Doctores pre-existentes
         medicos[0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3] = Medico("11111111", "Patricio", "Estrella", "General");
         medicos[0xF5B223A069ebfDc5D491b94fB50C8be0B063CB65] = Medico("22222222", "Bob", "Sponja", "General");
+        //Farmacéuticos pre-existentes
+        farmaceuticos[0x25fA2c9BE8c5653776398A0EAFcf5fC284F50c57] = Farmaceutico("123456789101112", "Cruz Azul");
     }
 
     //****************** Funciones que contienen la lógica del proceso de preescripciones médicas **********************
@@ -93,9 +101,8 @@ contract RecetaMedica {
         string memory _diagnostico,
         string memory _indicacionesExtras,
         Medicina[] memory _medicinas,
-        uint _fechaCaducidad
-    ) public {
-
+        uint _fechaCaducidad) public
+    {
         receta.id = recetas.length;
         receta.tokenMedico = msg.sender;
         receta.medico = _medico;
@@ -127,6 +134,15 @@ contract RecetaMedica {
         Receta[] memory recetas = new Receta[](contador);
         for (uint i = 0; i < contador; i++) {
             recetas[i] = recetasAux[i];
+        }
+        return recetas;
+    }
+
+    function getRecetasFarmaceutico(address cuentaFarmacia) public view returns (Receta[] memory){
+        Receta[] memory recetasVacia;
+        if(keccak256(abi.encodePacked(farmaceuticos[cuentaFarmacia].ruc))
+            == keccak256(abi.encodePacked(""))){
+            return recetasVacia;
         }
         return recetas;
     }

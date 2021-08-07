@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 import AppContext from "../contexts/AppContext";
 
 const Header = () => {
-    const {medico, paciente} = useContext(AppContext);
+    const {medico, paciente, farmaceutico} = useContext(AppContext);
 
     return (<nav className="navbar sticky-top navbar-expand-lg navbar-light header">
         <div className="container">
@@ -44,6 +44,13 @@ const Header = () => {
                         </NavLink>
                     </li>
                     }
+                    {(farmaceutico !== null && farmaceutico.ruc !== "") &&
+                    <li className="nav-item">
+                        <NavLink className="nav-link" aria-current="page" to="/despachoRecetas">
+                            Despachar Recetas
+                        </NavLink>
+                    </li>
+                    }
                 </ul>
                 <span className="navbar-text">
                     Bienvenido:
@@ -52,6 +59,9 @@ const Header = () => {
                     }
                     {(paciente !== null && paciente.cedulaPaciente !== "") &&
                     <strong>{" " + paciente.nombresPaciente + " " + paciente.apellidosPaciente}</strong>
+                    }
+                    {(farmaceutico !== null && farmaceutico.ruc !== "") &&
+                    <strong>{" "+farmaceutico.nombreComercial}</strong>
                     }
                 </span>
             </div>

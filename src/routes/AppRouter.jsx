@@ -7,10 +7,11 @@ import Inicio from "../pages/Inicio";
 import React, {useContext} from "react";
 import AppContext from "../contexts/AppContext";
 import RecetasPaciente from "../pages/RecetasPaciente";
+import DespachoRecetas from "../pages/DespachoRecetas";
 
 const AppRouter = () => {
 
-    const {paciente, medico} = useContext(AppContext);
+    const {paciente, medico, farmaceutico} = useContext(AppContext);
     return (<Router>
         <Header/>
         <Switch>
@@ -25,6 +26,11 @@ const AppRouter = () => {
             {(paciente !== null && paciente.cedulaPaciente !== "") &&
             <>
                 <Route exact path="/recetasPaciente" component={RecetasPaciente}/>
+            </>
+            }
+            {(farmaceutico !== null && farmaceutico.ruc !== "") &&
+            <>
+                <Route exact path="/despachoRecetas" component={DespachoRecetas}/>
             </>
             }
         </Switch>

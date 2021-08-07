@@ -17,6 +17,7 @@ export default function AppProvider({children}) {
     const [pacientes, setPacientes] = useState([]);
     const [medico, setMedico] = useState(null);
     const [paciente, setPaciente] = useState(null);
+    const [farmaceutico, setFarmaceutico] = useState(null);
     const recetaServicio = useRef(null);
     const web3 = useRef(null);
     useEffect(() => {
@@ -34,6 +35,7 @@ export default function AppProvider({children}) {
                         console.log("Algo salió mal " + error)
                     } else {
                         getCuentaActual(web3.current);
+
                     }
                 })
         }
@@ -102,6 +104,9 @@ export default function AppProvider({children}) {
                 setPaciente(pacienteActual);
                 let recetasPorPaciente = await recetaServicio.current.getRecetasPorPaciente(cuentaActual);
                 setRecetasPaciente(recetasPorPaciente)
+
+                let farmaceuticoActual = await recetaServicio.current.getFarmaceutico(cuentaActual);
+                setFarmaceutico(farmaceuticoActual);
             }
         }
     }
@@ -109,6 +114,7 @@ export default function AppProvider({children}) {
     return (<AppContext.Provider value={{
         medicinas,
         pacientes,
+        farmaceutico,
         recetasMedico,
         getRecetasPorMedico,
         recetasPaciente,

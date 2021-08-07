@@ -26,6 +26,11 @@ export class RecetaServicio {
         return recetas;
     }
 
+    async getRecetasFarmaceutico(cuentaFarmacia){
+        let recetas= await this.contract.getRecetasFarmaceutico(cuentaFarmacia);
+        return recetas;
+    }
+
     async eliminarReceta(id, cuentaMedico) {
         return this.contract.eliminarReceta(id, {from: cuentaMedico});
     }
@@ -56,6 +61,12 @@ export class RecetaServicio {
             especialidad: medico[3]
         };
     }
+
+    async getFarmaceutico(cuentaFarmacia){
+        let farmaceutico= await this.contract.farmaceuticos(cuentaFarmacia);
+        return farmaceutico;
+    }
+
 
     async getPaciente(cuentaPaciente) {
 
