@@ -1,25 +1,17 @@
-import React, {useContext, useEffect, useMemo, useState} from "react";
+import React, {useContext, useMemo, useState} from "react";
 import AppContext from "../contexts/AppContext";
 import Buscador from "../components/Buscador";
 
 const DespachoRecetas = () => {
     const [search, setSearch] = useState("");
-    const [recetasFarmaceutico, setRecetasFarmaceutico] = useState([]);
+
     const {
         convertirFecha,
         recetaServicio,
         cuenta,
-        mostrarNotificacion
+        mostrarNotificacion,
+        recetasFarmaceutico
     } = useContext(AppContext);
-
-    useEffect(() => {
-            recetaServicio.current.getRecetasFarmaceutico(cuenta).
-            then(x => setRecetasFarmaceutico(x)).
-            catch(error => mostrarNotificacion(2, "Algo salió Mal: " + error.message))
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-    );
 
     const handleClick = async idReceta => {
         try {
@@ -44,7 +36,7 @@ const DespachoRecetas = () => {
                     || receta.paciente.apellidos.toLowerCase().includes(search.toLowerCase())
             );
         }
-        return recetasAux;
+        return recetasAux.filter(x => x.fecha !== "0");
     }, [recetasFarmaceutico, search]);
 
     return (<div className="container my-5">

@@ -8,7 +8,7 @@ const Medicinas = ({handleMecinaAgregada}) => {
     const [busqueda, setBusqueda] = useState("");
     const [nuevaMedicina, setNuevaMedicina] = useState("");
     const [nuevaMedicinaIndicacion, setNuevaMedicinaIndicacion] = useState("");
-    const {medicinas} = useContext(AppContext);
+    const {medicinas, mostrarNotificacion} = useContext(AppContext);
     const indicacion = useRef("");
     const handleNuevaMedicinaChange = ({target: {value}}) => setNuevaMedicina(value);
     const handleNuevaMedicinaIndicacionChange = ({target: {value}}) => setNuevaMedicinaIndicacion(value);
@@ -105,8 +105,11 @@ const Medicinas = ({handleMecinaAgregada}) => {
                                         <td>{medicina.descripcion}</td>
                                         <td><input type="text"
                                                    onChange={handleIndicacionChange} onFocus={handleIndicacionChange}
-                                                   onBlur={() => {
+                                                   onBlur={(e) => {
                                                        indicacion.current !== "" && handleMecinaAgregada(medicina, indicacion.current)
+                                                       e.target.value !== "" && mostrarNotificacion(1, "Medicina agregada a la receta");
+                                                       e.target.value = "";
+
                                                    }}
                                                    placeholder="10 Und. 1 Cada hora"
                                                    className="form-control"/></td>
@@ -116,7 +119,6 @@ const Medicinas = ({handleMecinaAgregada}) => {
                             </table>
                         }
                     </div>
-
                 </div>
             </div>
         </div>

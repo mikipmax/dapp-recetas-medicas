@@ -57,16 +57,16 @@ contract RecetaMedica {
     mapping(address => uint) public pacientesTotalesPorDoctor;
 
     mapping(address => Farmaceutico) public farmaceuticos;
-    //************ Evento que reacciona al momento de registrar una receta para cualesquier paciente *******************
+    //************ Evento que reacciona al momento de registrar o eliminar una receta para cualesquier paciente *******************
 
-    event RecetaRegistrada(string nombresMedico, string apellidosMedico, address cuentaPaciente);
+    event AccionReceta(address cuenta);
 
     //************************ Constructor del contrato que establece datos predeterminados **************************
 
     constructor(){
         //Doctores pre-existentes
-        medicos[0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3] = Medico("11111111", "Patricio", "Estrella", "General");
-        medicos[0xF5B223A069ebfDc5D491b94fB50C8be0B063CB65] = Medico("22222222", "Bob", "Sponja", "General");
+        medicos[0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3] = Medico("15-0152498453", "Oscar Reynaldo", "Perez", "General");
+        medicos[0xF5B223A069ebfDc5D491b94fB50C8be0B063CB65] = Medico("21-5451254484", "Silvie Alejandra", "Cevallos", unicode"Traumatólogo");
         //Farmacéuticos pre-existentes
         farmaceuticos[0x25fA2c9BE8c5653776398A0EAFcf5fC284F50c57] = Farmaceutico("123456789101112", "Cruz Azul");
     }
@@ -116,7 +116,7 @@ contract RecetaMedica {
             receta.medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
         }
         recetas.push(receta);
-        emit RecetaRegistrada(_medico.nombres, _medico.apellidos, _paciente.cuentaPaciente);
+        emit AccionReceta(msg.sender);
     }
 
     function getRecetas(address cuenta, bool isMedico)
@@ -140,8 +140,8 @@ contract RecetaMedica {
 
     function getRecetasFarmaceutico(address cuentaFarmacia) public view returns (Receta[] memory){
         Receta[] memory recetasVacia;
-        if(keccak256(abi.encodePacked(farmaceuticos[cuentaFarmacia].ruc))
-            == keccak256(abi.encodePacked(""))){
+        if (keccak256(abi.encodePacked(farmaceuticos[cuentaFarmacia].ruc))
+            == keccak256(abi.encodePacked(""))) {
             return recetasVacia;
         }
         return recetas;
@@ -149,10 +149,12 @@ contract RecetaMedica {
 
     function eliminarReceta(uint idReceta) public {
         delete recetas[idReceta];
+        emit AccionReceta(msg.sender);
     }
 
     function despacharReceta(uint idReceta) public {
         recetas[idReceta].isDespachado = true;
+        emit AccionReceta(msg.sender);
     }
 
 }
