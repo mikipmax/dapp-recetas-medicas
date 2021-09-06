@@ -76,17 +76,17 @@ export default function AppProvider({children}) {
     };
 
     const getRecetasPorMedico = async cuentaActual => {
-        let recetasPorDoctor = await recetaServicio.current.getRecetasPorDoctor(cuentaActual);
+        let recetasPorDoctor = await recetaServicio.current.getRecetas(cuentaActual);
         setRecetasMedico(recetasPorDoctor);
     }
 
     const getRecetasPorPaciente = async cuentaActual => {
-        let recetasPorPaciente = await recetaServicio.current.getRecetasPorPaciente(cuentaActual);
+        let recetasPorPaciente = await recetaServicio.current.getRecetas(cuentaActual);
         setRecetasPaciente(recetasPorPaciente)
     }
 
     const getRecetasFarmaceutico = async cuentaActual => {
-        let receta = await recetaServicio.current.getRecetasFarmaceutico(!cuentaActual ? cuenta : cuentaActual);
+        let receta = await recetaServicio.current.getRecetas(cuentaActual);
         setRecetasFarmaceutico(receta);
     }
 
@@ -108,16 +108,23 @@ export default function AppProvider({children}) {
                 setCuenta(cuentaActual);
                 let medicoActual = await recetaServicio.current.getMedico(cuentaActual);
                 setMedico(medicoActual);
-                let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
-                setPacientes(pacientes);
-                await getRecetasPorMedico(cuentaActual);
+                if (medicoActual.cedulaProfesional !== "") {
+                    await getRecetasPorMedico(cuentaActual);
+                    let pacientes = await recetaServicio.current.getPacientes(cuentaActual);
+                    setPacientes(pacientes);
+                }
+
                 let pacienteActual = await recetaServicio.current.getPaciente(cuentaActual);
                 setPaciente(pacienteActual);
-                await getRecetasPorPaciente(cuentaActual);
-
+                if (pacienteActual.cedulaPaciente !== "") {
+                    await getRecetasPorPaciente(cuentaActual);
+                }
                 let farmaceuticoActual = await recetaServicio.current.getFarmaceutico(cuentaActual);
                 setFarmaceutico(farmaceuticoActual);
-                await getRecetasFarmaceutico(cuentaActual);
+                if (farmaceuticoActual.ruc !== "") {
+                    await getRecetasFarmaceutico(cuentaActual);
+                }
+
             }
         }
     }

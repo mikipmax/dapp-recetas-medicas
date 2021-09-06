@@ -36,7 +36,7 @@ const DespachoRecetas = () => {
                     || receta.paciente.apellidos.toLowerCase().includes(search.toLowerCase())
             );
         }
-        return recetasAux.filter(x => x.fecha !== "0");
+        return recetasAux;
     }, [recetasFarmaceutico, search]);
 
     return (<div className="container my-5">
@@ -123,7 +123,7 @@ const DespachoRecetas = () => {
                                     </table>
                                 </td>
                                 <td>{receta.indicacionesExtras}</td>
-                                <td>{receta.isDespachado ? "Despachado" : "Por Despachar"}</td>
+                                <td>{receta.isDespachado ? "Despachado" : "Pendiente"}</td>
                                 <td>
                                     <button type="button" className="btn link-danger" disabled={receta.isDespachado}
                                             onClick={() => handleClick(receta.id)}>Despachar

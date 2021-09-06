@@ -11,24 +11,29 @@ export class RecetaServicio {
     }
 
     async registrarReceta(medico, paciente, diagnostico, indicacionesExtras, medicinas, fechaCaducidad, cuentaDoctor) {
-        return this.contract.registrarReceta(medico, paciente, diagnostico, indicacionesExtras, medicinas,
-            fechaCaducidad, {from: cuentaDoctor});
+        //Valores iniciales, que luego solidity reasignara cuando haga la inserción en la red de blockchain
+        let id = 0;
+        let fecha = 0;
+        let tokenMedico = cuentaDoctor;
+        let isDespachado = false
+        let receta = {
+            id,
+            medico,
+            paciente,
+            diagnostico,
+            indicacionesExtras,
+            medicinas,
+            fecha,
+            fechaCaducidad,
+            tokenMedico,
+            isDespachado
+        }
+        return this.contract.registrarReceta(Object.values(receta), {from: cuentaDoctor});
     }
 
-    async getRecetasPorDoctor(cuentaDoctor) {
-
-        let recetas = await this.contract.getRecetas(cuentaDoctor, true);
-        return recetas;
-    }
-
-    async getRecetasPorPaciente(cuentaPaciente) {
-        let recetas = await this.contract.getRecetas(cuentaPaciente, false);
-        return recetas;
-    }
-
-    async getRecetasFarmaceutico(cuentaFarmacia){
-        let recetas= await this.contract.getRecetasFarmaceutico(cuentaFarmacia);
-        return recetas;
+    async getRecetas(cuenta) {
+        let recetas = await this.contract.getRecetas(cuenta);
+        return recetas.filter(x => x.fecha !== "0");
     }
 
     async eliminarReceta(id, cuentaMedico) {
@@ -62,11 +67,10 @@ export class RecetaServicio {
         };
     }
 
-    async getFarmaceutico(cuentaFarmacia){
-        let farmaceutico= await this.contract.farmaceuticos(cuentaFarmacia);
+    async getFarmaceutico(cuentaFarmacia) {
+        let farmaceutico = await this.contract.farmaceuticos(cuentaFarmacia);
         return farmaceutico;
     }
-
 
     async getPaciente(cuentaPaciente) {
 

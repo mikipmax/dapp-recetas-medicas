@@ -51,8 +51,10 @@ contract RecetaMedica {
 
     mapping(address => Paciente) public pacientes;
 
-    Receta[] private recetas;
+    mapping(address => bool) private cuentaMedicoAsociada;
+    mapping(address => bool) private cuentaFarmaciaAsociada;
 
+    Receta[] private recetas;
     mapping(address => Paciente[]) public pacientesPorDoctor;
     mapping(address => uint) public pacientesTotalesPorDoctor;
 
@@ -65,17 +67,20 @@ contract RecetaMedica {
 
     constructor(){
         //Doctores pre-existentes
-        medicos[0x0DF3c5E1e60A27f02D9d0FF8730c99A73D924Fc3] = Medico("15-0152498453", "Oscar Reynaldo", "Perez", "General");
-        medicos[0xF5B223A069ebfDc5D491b94fB50C8be0B063CB65] = Medico("21-5451254484", "Silvie Alejandra", "Cevallos", unicode"Traumatólogo");
+        medicos[0xd649Eb8f02Ac1B75Ca4e88EDcbd129d9B25B2E78] = Medico("15-0152498453", "Oscar Reynaldo", "Perez", "General");
+        cuentaMedicoAsociada[0xd649Eb8f02Ac1B75Ca4e88EDcbd129d9B25B2E78] = true;
+        medicos[0x0c5EcBeA405BeA490cE9edFd667DAdd232dB0C95] = Medico("21-5451254484", "Silvie Alejandra", "Cevallos", unicode"Traumatólogo");
+        cuentaMedicoAsociada[0x0c5EcBeA405BeA490cE9edFd667DAdd232dB0C95] = true;
         //Farmacéuticos pre-existentes
-        farmaceuticos[0x25fA2c9BE8c5653776398A0EAFcf5fC284F50c57] = Farmaceutico("123456789101112", "Cruz Azul");
+        farmaceuticos[0x5861c3C5d1fa4E968f512753bd8546aF495c527B] = Farmaceutico("123456789101112", "Cruz Azul");
+        cuentaFarmaciaAsociada[0x5861c3C5d1fa4E968f512753bd8546aF495c527B] = true;
     }
 
     //****************** Funciones que contienen la lógica del proceso de preescripciones médicas **********************
 
     function registrarPaciente(
         Paciente memory _paciente
-    ) public {
+    ) public isMedico {
         for (uint i = 0; i < pacientesTotalesPorDoctor[msg.sender]; i++) {
             //Se valida en caso de que el paciente tenga ya un address asociado
             //además, se emplea && ya que, puede darse el caso en que, la cédula de un _paciente
@@ -96,65 +101,63 @@ contract RecetaMedica {
     Receta private receta;
 
     function registrarReceta(
-        Medico memory _medico,
-        Paciente memory _paciente,
-        string memory _diagnostico,
-        string memory _indicacionesExtras,
-        Medicina[] memory _medicinas,
-        uint _fechaCaducidad) public
+        Receta memory _receta) public isMedico
     {
         receta.id = recetas.length;
         receta.tokenMedico = msg.sender;
-        receta.medico = _medico;
-        receta.paciente = _paciente;
-        receta.diagnostico = _diagnostico;
-        receta.indicacionesExtras = _indicacionesExtras;
+        receta.medico = _receta.medico;
+        receta.paciente = _receta.paciente;
+        receta.diagnostico = _receta.diagnostico;
+        receta.indicacionesExtras = _receta.indicacionesExtras;
         receta.fecha = block.timestamp;
-        receta.fechaCaducidad = _fechaCaducidad;
+        receta.fechaCaducidad = _receta.fechaCaducidad;
+
         delete receta.medicinas;
-        for (uint j = 0; j < _medicinas.length; j++) {
-            receta.medicinas.push(Medicina(_medicinas[j].nombreMedicina, _medicinas[j].indicacion));
+        for (uint j = 0; j < _receta.medicinas.length; j++) {
+            receta.medicinas.push(_receta.medicinas[j]);
         }
         recetas.push(receta);
+
         emit AccionReceta(msg.sender);
     }
 
-    function getRecetas(address cuenta, bool isMedico)
+    function getRecetas(address cuenta)
     public view returns (Receta[] memory) {
+
+        if (cuentaFarmaciaAsociada[cuenta]) {
+            return recetas;
+        }
+
         Receta[] memory recetasAux = new Receta[](recetas.length);
         uint contador = 0;
         for (uint i = 0; i < recetas.length; i++) {
-            if (isMedico ? recetas[i].tokenMedico == cuenta :
+            if (cuentaMedicoAsociada[cuenta] ? recetas[i].tokenMedico == cuenta :
                 recetas[i].paciente.cuentaPaciente == cuenta) {
                 recetasAux[contador] = recetas[i];
                 contador++;
             }
         }
-        //Eliminamos los indices que contienen recetas con valores vacios
-        Receta[] memory recetas = new Receta[](contador);
-        for (uint i = 0; i < contador; i++) {
-            recetas[i] = recetasAux[i];
-        }
-        return recetas;
+        return recetasAux;
     }
 
-    function getRecetasFarmaceutico(address cuentaFarmacia) public view returns (Receta[] memory){
-        Receta[] memory recetasVacia;
-        if (keccak256(abi.encodePacked(farmaceuticos[cuentaFarmacia].ruc))
-            == keccak256(abi.encodePacked(""))) {
-            return recetasVacia;
-        }
-        return recetas;
-    }
-
-    function eliminarReceta(uint idReceta) public {
+    function eliminarReceta(uint idReceta) public isMedico {
         delete recetas[idReceta];
         emit AccionReceta(msg.sender);
     }
 
-    function despacharReceta(uint idReceta) public {
-        recetas[idReceta].isDespachado = true;
-        emit AccionReceta(msg.sender);
+    function despacharReceta(uint idReceta) public isFarmaceutico {
+        if (recetas[idReceta].fechaCaducidad - block.timestamp > 0) {
+            recetas[idReceta].isDespachado = true;
+            emit AccionReceta(msg.sender);
+        }
     }
 
+    modifier isMedico (){
+        require(cuentaMedicoAsociada[msg.sender]);
+        _;
+    }
+    modifier isFarmaceutico (){
+        require(cuentaFarmaciaAsociada[msg.sender]);
+        _;
+    }
 }

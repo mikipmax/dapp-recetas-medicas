@@ -129,7 +129,7 @@ const RecetasMedico = () => {
                                     </table>
                                 </td>
                                 <td>{receta.indicacionesExtras}</td>
-                                <td>{receta.isDespachado ? "Despachado" : "Por Despachar"}</td>
+                                <td>{receta.isDespachado ? "Despachado" : "Pendiente"}</td>
                                 <td>
                                     {instancia.loading ? <div>Cargando ...</div> :
                                         <a className="link-info btn" href={instancia.url}
