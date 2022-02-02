@@ -23,7 +23,6 @@ export default function AppProvider({children}) {
     const web3 = useRef(null);
 
     useEffect(() => {
-
         const inicializacion = async () => {
             web3.current = await getWeb3();
             let recetaInstancia = await RecetaMedicaInstancia(web3.current);
@@ -41,7 +40,6 @@ export default function AppProvider({children}) {
                 })
         }
         inicializacion();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

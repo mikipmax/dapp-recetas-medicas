@@ -2,16 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6f3b2d9-9ff4-4d54-b33a-63262e9c55cc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dapp-recetas-medicas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dapp-recetas-medicas.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contracts/RecetaMedica.sol" beforeDir="false" afterPath="$PROJECT_DIR$/contracts/RecetaMedica.sol" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dapp-recetas-medicas.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/2_recetas_medicas_migration.js" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/2_recetas_medicas_migration.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/artifacts/Migrations.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/Migrations.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/artifacts/RecetaMedica.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/truffle-config.js" beforeDir="false" afterPath="$PROJECT_DIR$/truffle-config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/AppProvider.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/contexts/AppProvider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/recetaTruffle/RecetaServicio.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/recetaTruffle/RecetaServicio.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/web3/getWeb3.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/web3/getWeb3.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,22 +39,25 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/SimpleScaffolding-master/SimpleScaffolding-master" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2021.1.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -75,7 +76,23 @@
       <workItem from="1631241161070" duration="2473000" />
       <workItem from="1631384867389" duration="10132000" />
       <workItem from="1631487348736" duration="6351000" />
-      <workItem from="1632005628617" duration="5107000" />
+      <workItem from="1632005628617" duration="7345000" />
+      <workItem from="1632282218905" duration="2356000" />
+      <workItem from="1632367971524" duration="2442000" />
+      <workItem from="1632456049255" duration="119000" />
+      <workItem from="1632456263534" duration="1583000" />
+      <workItem from="1632614816140" duration="678000" />
+      <workItem from="1633052956383" duration="6225000" />
+      <workItem from="1635126910818" duration="603000" />
+      <workItem from="1637462108397" duration="640000" />
+      <workItem from="1638217968035" duration="625000" />
+      <workItem from="1638595145586" duration="2091000" />
+      <workItem from="1639196807514" duration="2673000" />
+      <workItem from="1639975261032" duration="6005000" />
+      <workItem from="1640406337028" duration="4367000" />
+      <workItem from="1641101666960" duration="4183000" />
+      <workItem from="1643656048622" duration="798000" />
+      <workItem from="1643831467416" duration="3147000" />
     </task>
     <servers />
   </component>

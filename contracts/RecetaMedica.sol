@@ -2,8 +2,8 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 contract RecetaMedica {
-    //************************** Estructuras que simulan los actores de las prescripciones médicas *********************
 
+    //************************** Sección de Estructuras requeridas para el proceso de las prescripciones médicas *********************
     struct Medicina {
         string nombreMedicina;
         string indicacion;
@@ -44,10 +44,9 @@ contract RecetaMedica {
         bool isDespachado;
     }
 
-    //****** Arreglos de tipo Map en donde se almacena la información en el proceso de preescripciones médicas *********
+    //****** Variables de estado que almacenan la información en el proceso de preescripciones médicas ******************
     Receta private receta;
     Receta[] private recetas;
-
     mapping(address => Medico) public medicos;
     mapping(address => Paciente) public pacientes;
     mapping(address => bool) private cuentaMedicoAsociada;
@@ -57,21 +56,20 @@ contract RecetaMedica {
     mapping(address => Farmaceutico) public farmaceuticos;
 
     //************ Evento que reacciona al momento de registrar o eliminar una receta para cualesquier paciente *******************
-
     event AccionReceta(address cuenta);
 
     //************************ Constructor del contrato que establece datos predeterminados **************************
-
     constructor(){
         //Doctores pre-existentes
-        medicos[0xd649Eb8f02Ac1B75Ca4e88EDcbd129d9B25B2E78] = Medico("15-0152498453", "Oscar Reynaldo", "Perez", "General");
-        cuentaMedicoAsociada[0xd649Eb8f02Ac1B75Ca4e88EDcbd129d9B25B2E78] = true;
-        medicos[0x0c5EcBeA405BeA490cE9edFd667DAdd232dB0C95] = Medico("21-5451254484", "Silvie Alejandra", "Cevallos", unicode"Traumatólogo");
-        cuentaMedicoAsociada[0x0c5EcBeA405BeA490cE9edFd667DAdd232dB0C95] = true;
+        medicos[0x23174599ea38783d0752bD3d8D6CD79F6602aa3F] = Medico("15-0152498453", "Oscar Reynaldo", "Perez", "General");
+        cuentaMedicoAsociada[0x23174599ea38783d0752bD3d8D6CD79F6602aa3F] = true;
+        medicos[0x4CFF6aa4900bbD5f1E44CbA20bCf64DFaCd7cb3D] = Medico("21-5451254484", "Silvie Alejandra", "Cevallos", unicode"Traumatólogo");
+        cuentaMedicoAsociada[0x4CFF6aa4900bbD5f1E44CbA20bCf64DFaCd7cb3D] = true;
         //Farmacéuticos pre-existentes
-        farmaceuticos[0x5861c3C5d1fa4E968f512753bd8546aF495c527B] = Farmaceutico("123456789101112", "Cruz Azul");
-        cuentaFarmaciaAsociada[0x5861c3C5d1fa4E968f512753bd8546aF495c527B] = true;
+        farmaceuticos[0x8a7FE52D88ce383cd99b83BE0b9cCa8E9D788Cc4] = Farmaceutico("123456789101112", "Cruz Azul");
+        cuentaFarmaciaAsociada[0x8a7FE52D88ce383cd99b83BE0b9cCa8E9D788Cc4] = true;
     }
+
     // ********************************** Modificadores de acceso personalizados ****************************************
     modifier isMedico (){
         require(cuentaMedicoAsociada[msg.sender]);
@@ -83,7 +81,6 @@ contract RecetaMedica {
     }
 
     //****************** Funciones que contienen la lógica del proceso de preescripciones médicas **********************
-
     function registrarPaciente(
         Paciente memory _paciente
     ) public isMedico {

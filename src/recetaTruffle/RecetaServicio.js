@@ -17,15 +17,7 @@ export class RecetaServicio {
         let tokenMedico = cuentaDoctor;
         let isDespachado = false
         let receta = {
-            id,
-            medico,
-            paciente,
-            diagnostico,
-            indicacionesExtras,
-            medicinas,
-            fecha,
-            fechaCaducidad,
-            tokenMedico,
+            id, medico, paciente, diagnostico, indicacionesExtras, medicinas, fecha, fechaCaducidad, tokenMedico,
             isDespachado
         }
         return this.contract.registrarReceta(Object.values(receta), {from: cuentaDoctor});
@@ -45,19 +37,16 @@ export class RecetaServicio {
     }
 
     async getPacientes(cuentaDoctor) {
-
         let pacientesTotalesPorDoctor = await this.contract.pacientesTotalesPorDoctor(cuentaDoctor);
         let pacientes = [];
         for (let i = 0; i < pacientesTotalesPorDoctor.toNumber(); i++) {
             let paciente = await this.contract.pacientesPorDoctor(cuentaDoctor, i);
             pacientes.push(paciente);
         }
-
         return this.mapPacientes(pacientes);
     }
 
     async getMedico(cuentaDoctor) {
-
         let medico = await this.contract.medicos(cuentaDoctor);
         return {
             cedulaProfesional: medico[0],
